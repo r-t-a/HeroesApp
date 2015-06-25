@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Heroes Top Builds</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Info</string>
+    <string name="action_donate">Donate</string>
+    <string name="main_title">SELECT A HERO</string>
+    <string name="default_text">TextView</string>
+    <string name="button_text">Cool</string>
+    <string name="info_text">An app for players that want a quick and dirty view of the popular skills to pick for each hero without guide researching.\n\nThe skills for the heroes are based on their popularity from hotslogs.com.\n\nThis will be updated as HOTS updates occur and popular skills change.</string>
+</resources>
