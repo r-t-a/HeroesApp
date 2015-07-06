@@ -23,4 +23,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
+    compile files('libs/jsoup-1.6.1.jar')
+    compile 'org.jsoup:jsoup:1.8.2'
 }
