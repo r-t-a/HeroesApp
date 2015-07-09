@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * images and an array list to hold the information.  The usual getters
  * and setters are here that are required for a BaseExpandableListAdapter
  *
- * Created by ryan on 6/18/15.
+ * @author ryan
  */
 public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     private Context context;

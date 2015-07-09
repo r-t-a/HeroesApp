@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Hero group for the Expandable List
  *
- * Created by ryan on 6/18/15.
+ * @author ryan
  */
 public class Heroes {
 

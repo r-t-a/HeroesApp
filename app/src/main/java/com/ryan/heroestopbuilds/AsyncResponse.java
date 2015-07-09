@@ -3,8 +3,10 @@ package com.ryan.heroestopbuilds;
 import java.util.ArrayList;
 
 /**
- * Created by ryan on 6/30/15.
+ * For JSoup talker to pass back information to MainActivity
+ *
+ * @author ryan
  */
 public interface AsyncResponse {
-    void processFinish(ArrayList<String[]> output);
+    void processFinish(ArrayList<String> output);
 }

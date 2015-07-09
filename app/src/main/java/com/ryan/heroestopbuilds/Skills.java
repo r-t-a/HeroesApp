@@ -3,7 +3,7 @@ package com.ryan.heroestopbuilds;
 /**
  * Skills for child group in Expandable List
  *
- * Created by ryan on 6/18/15.
+ * @author ryan
  */
 public class Skills {
     private String name;
