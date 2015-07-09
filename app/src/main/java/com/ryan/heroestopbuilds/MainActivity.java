@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static android.view.Gravity.CENTER;
 
@@ -49,13 +48,13 @@ public class MainActivity extends AppCompatActivity {
     PopupWindow popupWindow;
     ExpandableListView expandList;
     ArrayList<String> outList = new ArrayList<>();
+    String format;
 
     // Get response from web
     JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
         @Override
         public void processFinish(ArrayList<String> output) {
             outList.addAll(output);
-            System.out.println("OutList " + outList);
         }
     });
 
@@ -81,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
             popupWindow = showInfoPopup();
             popupWindow.showAtLocation(findViewById(R.id.expandableList), CENTER, 0, 15);
             return true;
+        } else if(id == R.id.action_refresh) {
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -93,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
      * @return ArrayList for expandableList
      */
     public ArrayList<Heroes> setHeroes() {
-
         int portraits[] = {R.drawable.abathur, R.drawable.anubarak, R.drawable.arthas,
                            R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
                            R.drawable.diablo,  R.drawable.elite_tauren_chieftain, R.drawable.falstad,
@@ -123,155 +123,270 @@ public class MainActivity extends AppCompatActivity {
             Skills skills = new Skills();
             switch (hero_names[i]) {
                 case "Abathur":
-                    skills.setName(outList.get(0));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Anub'arak":
-                    skills.setName(outList.get(1));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Arthas":
-                    skills.setName(outList.get(2));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Azmodan":
-                    skills.setName(outList.get(3));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Brightwing":
-                    skills.setName(outList.get(4));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Chen":
-                    skills.setName(outList.get(5));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Diablo":
-                    skills.setName(outList.get(6));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "E.T.C.":
-                    skills.setName(outList.get(7));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Falstad":
-                    skills.setName(outList.get(8));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Gazlowe":
-                    skills.setName(outList.get(9));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Illidan":
-                    skills.setName(outList.get(10));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Jaina":
-                    skills.setName(outList.get(11));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Johanna":
-                    skills.setName(outList.get(12));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Kaelthas":
-                    skills.setName(outList.get(13));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Kerrigan":
-                    skills.setName(outList.get(14));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Li Li":
-                    skills.setName(outList.get(15));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Malfurion":
-                    skills.setName(outList.get(16));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Muradin":
-                    skills.setName(outList.get(17));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Murky":
-                    skills.setName(outList.get(18));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Nazeebo":
-                    skills.setName(outList.get(19));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Nova":
-                    skills.setName(outList.get(20));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Rehgar":
-                    skills.setName(outList.get(21));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Raynor":
-                    skills.setName(outList.get(22));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Sgt. Hammer":
-                    skills.setName(outList.get(23));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Sonya":
-                    skills.setName(outList.get(24));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Stitches":
-                    skills.setName(outList.get(25));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Sylvanas":
-                    skills.setName(outList.get(26));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Tassadar":
-                    skills.setName(outList.get(27));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "The Butcher":
-                    skills.setName(outList.get(28));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "The Lost Vikings":
-                    skills.setName(outList.get(29));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Thrall":
-                    skills.setName(outList.get(30));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Tychus":
-                    skills.setName(outList.get(31));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Tyrael":
-                    skills.setName(outList.get(32));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Tyrande":
-                    skills.setName(outList.get(33));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Uther":
-                    skills.setName(outList.get(34));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Valla":
-                    skills.setName(outList.get(35));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Zagara":
-                    skills.setName(outList.get(36));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 case "Zeratul":
-                    skills.setName(outList.get(37));
+                    format = outList.get(i)
+                            .replace(",", "\n")
+                            .replace("[", "")
+                            .replace("]", "");
                     sk_list.add(skills);
                     break;
                 }
@@ -329,7 +444,8 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pd = new ProgressDialog(MainActivity.this);
-            pd.setMessage("loading");
+            pd.setMessage("Gathering Popular Builds");
+            pd.setCancelable(false);
             pd.show();
             Log.i(TAG,"PreExecute");
         }

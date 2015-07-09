@@ -4,21 +4,14 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical">
 
-    <!-- Maybe add images to these later -->
-    <!--ImageView
-        android:id="@+id/image1"
-        android:src="@mipmap/ic_launcher"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="25dp"/-->
     <TextView
         android:id="@+id/skill_text"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="95dp"
-        android:gravity="center"
+        android:layout_marginLeft="70dp"
+        android:gravity="left"
         android:text="@string/default_text"/>
 
 </RelativeLayout>
