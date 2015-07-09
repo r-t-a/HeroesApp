@@ -130,11 +130,13 @@ public class MainActivity extends AppCompatActivity {
                     skills.setName(format);
                     sk_list.add(skills);
                     break;
+
                 case "Anub'arak":
                     format = outList.get(i)
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Arthas":
@@ -142,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Azmodan":
@@ -149,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Brightwing":
@@ -156,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Chen":
@@ -163,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Diablo":
@@ -170,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "E.T.C.":
@@ -177,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Falstad":
@@ -184,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Gazlowe":
@@ -191,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Illidan":
@@ -198,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Jaina":
@@ -205,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Johanna":
@@ -212,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Kaelthas":
@@ -219,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Kerrigan":
@@ -226,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Li Li":
@@ -233,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Malfurion":
@@ -240,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Muradin":
@@ -247,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Murky":
@@ -254,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Nazeebo":
@@ -261,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Nova":
@@ -268,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Rehgar":
@@ -275,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Raynor":
@@ -282,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Sgt. Hammer":
@@ -289,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Sonya":
@@ -296,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Stitches":
@@ -303,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Sylvanas":
@@ -310,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Tassadar":
@@ -317,6 +344,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "The Butcher":
@@ -324,6 +352,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "The Lost Vikings":
@@ -331,6 +360,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Thrall":
@@ -338,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Tychus":
@@ -345,6 +376,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Tyrael":
@@ -352,6 +384,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Tyrande":
@@ -359,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Uther":
@@ -366,6 +400,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Valla":
@@ -373,6 +408,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Zagara":
@@ -380,6 +416,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 case "Zeratul":
@@ -387,6 +424,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(",", "\n")
                             .replace("[", "")
                             .replace("]", "");
+                    skills.setName(format);
                     sk_list.add(skills);
                     break;
                 }
