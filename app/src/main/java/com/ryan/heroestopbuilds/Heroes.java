@@ -36,4 +36,5 @@ public class Heroes {
     public void setSkills(ArrayList<Skills> skills) {
         this.skills = skills;
     }
+
 }

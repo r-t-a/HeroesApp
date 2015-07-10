@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static android.view.Gravity.CENTER;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     ExpandableListView expandList;
     ArrayList<String> outList = new ArrayList<>();
     String format;
+    HeroDatabase db = new HeroDatabase(this);
 
     // Get response from web
     JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
@@ -129,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
                             .replace("]", "");
                     skills.setName(format);
                     sk_list.add(skills);
+                    db.addHero(new StoredHero("Abathur", format));
                     break;
-
                 case "Anub'arak":
                     format = outList.get(i)
                             .replace(",", "\n")
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace("]", "");
                     skills.setName(format);
                     sk_list.add(skills);
+                    db.addHero(new StoredHero("Anub'arak", format));
                     break;
                 case "Arthas":
                     format = outList.get(i)
@@ -146,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace("]", "");
                     skills.setName(format);
                     sk_list.add(skills);
+                    db.addHero(new StoredHero("Arthas", format));
                     break;
                 case "Azmodan":
                     format = outList.get(i)
@@ -154,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace("]", "");
                     skills.setName(format);
                     sk_list.add(skills);
+                    db.addHero(new StoredHero("Azmodan", format));
                     break;
                 case "Brightwing":
                     format = outList.get(i)
@@ -162,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace("]", "");
                     skills.setName(format);
                     sk_list.add(skills);
+                    db.addHero(new StoredHero("Brightwing", format));
                     break;
                 case "Chen":
                     format = outList.get(i)
@@ -430,6 +436,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             hero.setSkills(sk_list);
             list.add(hero);
+        }
+
+        // Reading all contacts
+        Log.d("Reading: ", "Reading all contacts..");
+        List<StoredHero> storedHeros = db.getAllHeroes();
+        for (StoredHero sh : storedHeros) {
+            String log = "Id: "+sh.getId()+" , Name: " + sh.getName() + " , Skills:\n " + sh.getSkills();
+            // Writing Contacts to log
+            System.out.println(log);
         }
         return list;
     }
