@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="70dp"
         android:gravity="left"
-        android:text="@string/default_text"/>
+        android:text="@string/default_text"
+        android:focusable="false"/>
 
 </RelativeLayout>

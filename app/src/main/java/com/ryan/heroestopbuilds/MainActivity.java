@@ -14,12 +14,10 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,9 +28,9 @@ import static android.view.Gravity.CENTER;
 
 /**
  * Simple activity that will handle the ExpandableListView
- * after getting the recent build info from BootActivity
- * ActionBar Menu will have an info button and a refresh
- * option to be implemented later.
+ * after getting the recent skills from AsyncTask, this
+ * will be done once and auto update every week or so (still
+ * deciding on that)
  *
  * @author ryan
  */
@@ -49,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     PopupWindow popupWindow;
     ExpandableListView expandList;
     ArrayList<String> outList = new ArrayList<>();
-    String format;
     HeroDatabase db = new HeroDatabase(this);
 
     // Get response from web
@@ -64,7 +61,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        talker.execute();
+        expandList = (ExpandableListView) findViewById(R.id.expandableList);
+        findViewById(R.id.layout).post(new Runnable() {
+            @Override
+            public void run() {
+                popupWindow = showOptionsAtStart();
+                popupWindow.showAtLocation(findViewById(R.id.layout), CENTER, 0, 0);
+            }
+        });
     }
 
         @Override
@@ -82,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
             popupWindow = showInfoPopup();
             popupWindow.showAtLocation(findViewById(R.id.expandableList), CENTER, 0, 15);
             return true;
-        } else if(id == R.id.action_refresh) {
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -97,354 +99,190 @@ public class MainActivity extends AppCompatActivity {
      */
     public ArrayList<Heroes> setHeroes() {
         int portraits[] = {R.drawable.abathur, R.drawable.anubarak, R.drawable.arthas,
-                           R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
-                           R.drawable.diablo,  R.drawable.elite_tauren_chieftain, R.drawable.falstad,
-                           R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
-                           R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan,
-                           R.drawable.li_li,   R.drawable.malfurion, R.drawable.muradin,
-                           R.drawable.murky,   R.drawable.nazeebo, R.drawable.nova,
-                           R.drawable.raynor,  R.drawable.rehgar, R.drawable.sergeant_hammer,
-                           R.drawable.sonya,   R.drawable.stitches, R.drawable.sylvanas,
-                           R.drawable.tassadar,R.drawable.the_butcher,R.drawable.the_lost_vikings,
-                           R.drawable.thrall,  R.drawable.tychus,  R.drawable.tyrael, R.drawable.tyrande,
-                           R.drawable.uther,   R.drawable.valla, R.drawable.zagara,
-                           R.drawable.zeratul};
+                R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
+                R.drawable.diablo, R.drawable.elite_tauren_chieftain, R.drawable.falstad,
+                R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
+                R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan,
+                R.drawable.li_li, R.drawable.malfurion, R.drawable.muradin,
+                R.drawable.murky, R.drawable.nazeebo, R.drawable.nova,
+                R.drawable.raynor, R.drawable.rehgar, R.drawable.sergeant_hammer,
+                R.drawable.sonya, R.drawable.stitches, R.drawable.sylvanas,
+                R.drawable.tassadar, R.drawable.the_butcher, R.drawable.the_lost_vikings,
+                R.drawable.thrall, R.drawable.tychus, R.drawable.tyrael, R.drawable.tyrande,
+                R.drawable.uther, R.drawable.valla, R.drawable.zagara,
+                R.drawable.zeratul};
 
         ArrayList<Heroes> list = new ArrayList<>();
         //populate the expandable list with the heroes
-        for(int i = 0; i<hero_names.length; i++) {
+        for (int i = 0; i < hero_names.length; i++) {
             Heroes hero = new Heroes();
             //set name and portrait
             hero.setName(hero_names[i]);
             hero.setPortrait(portraits[i]);
 
             //set child group skills
-            //possible refactoring could be done here but as it stands now,
-            //it's easy to add any new Hero
-            ArrayList<Skills> sk_list = new ArrayList<>();
+            //possible refactoring could be done here, but as it stands now,
+            //it's easy to add any new Hero that comes along
+            ArrayList<Skills> skillList = new ArrayList<>();
             Skills skills = new Skills();
+
+            List<String> storedSkills = db.getAllHeroes();
             switch (hero_names[i]) {
-                case "Abathur":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
-                    db.addHero(new StoredHero("Abathur", format));
+                 case "Abathur":
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Anub'arak":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
-                    db.addHero(new StoredHero("Anub'arak", format));
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Arthas":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
-                    db.addHero(new StoredHero("Arthas", format));
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Azmodan":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
-                    db.addHero(new StoredHero("Azmodan", format));
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Brightwing":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
-                    db.addHero(new StoredHero("Brightwing", format));
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Chen":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Diablo":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "E.T.C.":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Falstad":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Gazlowe":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Illidan":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Jaina":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Johanna":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Kaelthas":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Kerrigan":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Li Li":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Malfurion":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Muradin":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Murky":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Nazeebo":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Nova":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Rehgar":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Raynor":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Sgt. Hammer":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Sonya":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Stitches":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Sylvanas":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Tassadar":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "The Butcher":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "The Lost Vikings":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Thrall":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Tychus":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Tyrael":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Tyrande":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Uther":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Valla":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Zagara":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
                 case "Zeratul":
-                    format = outList.get(i)
-                            .replace(",", "\n")
-                            .replace("[", "")
-                            .replace("]", "");
-                    skills.setName(format);
-                    sk_list.add(skills);
+                    skills.setName(storedSkills.get(i));
+                    skillList.add(skills);
                     break;
-                }
-            hero.setSkills(sk_list);
+            }
+            hero.setSkills(skillList);
             list.add(hero);
-        }
-
-        // Reading all contacts
-        Log.d("Reading: ", "Reading all contacts..");
-        List<StoredHero> storedHeros = db.getAllHeroes();
-        for (StoredHero sh : storedHeros) {
-            String log = "Id: "+sh.getId()+" , Name: " + sh.getName() + " , Skills:\n " + sh.getSkills();
-            // Writing Contacts to log
-            System.out.println(log);
         }
         return list;
     }
@@ -475,8 +313,36 @@ public class MainActivity extends AppCompatActivity {
         return popupWindow;
     }
 
+    public PopupWindow showOptionsAtStart() {
+        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View popupView = layoutInflater.inflate(R.layout.options, new LinearLayout(getBaseContext()), false);
+        final PopupWindow popupWindow = new PopupWindow(
+                popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        Button btnUpdate = (Button)popupView.findViewById(R.id.button_update);
+        btnUpdate.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getApplicationContext().deleteDatabase("heroes");
+                talker.execute();
+                popupWindow.dismiss();
+            }
+        });
+
+        Button btnOffline = (Button)popupView.findViewById(R.id.button_offline);
+        btnOffline.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Heroes> heroList = setHeroes();
+                CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, heroList);
+                expandList.setAdapter(customAdapt);
+                popupWindow.dismiss();
+            }
+        });
+        return popupWindow;
+    }
+
     /**
-     * JSoup will be used to get website data from hotslogs.com
+     * JSoup is used to get website data from hotslogs.com
      * This info will be thrown to the Database once acquired
      * to keep it up to date
      */
@@ -488,6 +354,7 @@ public class MainActivity extends AppCompatActivity {
         String popularString = null;
         String convert = null;
         private ProgressDialog pd = null;
+        String url = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=";
 
         public JSoupTalker(AsyncResponse listener) {
             this.listener = listener;
@@ -496,11 +363,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(MainActivity.this);
-            pd.setMessage("Gathering Popular Builds");
-            pd.setCancelable(false);
-            pd.show();
-            Log.i(TAG,"PreExecute");
+            if (pd == null) {
+                pd = new ProgressDialog(MainActivity.this);
+                pd.setMessage("Gathering Popular Builds");
+                pd.setCancelable(false);
+                pd.show();
+            }
+            Log.i(TAG, "PreExecute");
         }
 
         @Override
@@ -509,25 +378,26 @@ public class MainActivity extends AppCompatActivity {
             Document doc;
             try {
                 for (String aHero: hero_names) {
-                    ArrayList<Integer> gamesPlayed = new ArrayList<>();
+                    ArrayList<Float> gamesPlayed = new ArrayList<>();
                     ArrayList<String> skillNames = new ArrayList<>();
                     ArrayList<String> popularSkills;
 
-                    doc = Jsoup.connect("https://www.hotslogs.com/Sitewide/HeroDetails?Hero=" + aHero)
-                            .maxBodySize(0).get();
+                    doc = Jsoup.connect(url + aHero).maxBodySize(0).get();
+
                     //get the table
                     Element table = doc.getElementsByTag("table").get(2);
 
-                    //get the "Games Played" Rows
                     for (Element row : table.select("tr")) {
-                        Elements tds = row.select("td");
-                        if (tds.size() > 10) {
-                            //Grab all games played values
-                            gamesPlayed.add(Integer.valueOf(tds.get(0).text()));
+                        Elements cols = row.select("td");
+                        if(cols.size() > 10) {
+                            String values = cols.get(0).text().replaceAll("%", "").trim();
+
+                            gamesPlayed.add(Float.valueOf(values));
                             //get the largest games played value, this is the most popular
-                            Integer popular = Collections.max(gamesPlayed);
+                            Float popular = Collections.max(gamesPlayed);
                             popularString = popular.toString();
-                            if (tds.get(0).text().equals(popularString)) {
+
+                            if (values.equals(popularString)) {
                                 //add to new array
                                 skillNames.add(row.text());
                             }
@@ -542,15 +412,15 @@ public class MainActivity extends AppCompatActivity {
 
                     //split that long string up and put it into a list
                     popularSkills = new ArrayList<>(Arrays.asList(convert.split(" ")));
-                    popularSkills.remove(0);  //removing games played #
                     popularSkills.remove(0);  //removing win percent #
                     popularSkills.remove(0);  //removing % sign
                     //add our final list to a new list to be passed to MainActivity
                     passList.add(String.valueOf(popularSkills));
                 }
-                //double check in logcat we got the right skills
-                listener.processFinish(passList);
-                Log.i(TAG, "Popular Skills" + passList);
+                    //double check in logcat we got the right skills
+                    listener.processFinish(passList);
+                    Log.i(TAG, "Popular Skills" + passList);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -560,8 +430,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<String> result) {
             Log.i(TAG, "PostExecute");
+
+            for(int i = 0; i < hero_names.length; i++) {
+                String format = outList.get(i)
+                        .replace(",", "\n")
+                        .replace("[", "")
+                        .replace("]", "");
+                db.addHero(new StoredSkills(format));
+            }
+
             //build the list and set the adapter with our custom one
-            expandList = (ExpandableListView) findViewById(R.id.expandableList);
             ArrayList<Heroes> heroList = setHeroes();
             CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, heroList);
             expandList.setAdapter(customAdapt);
