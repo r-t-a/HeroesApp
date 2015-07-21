@@ -1,6 +1,7 @@
 package com.ryan.heroestopbuilds;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -44,31 +45,53 @@ public class MainActivity extends AppCompatActivity {
             "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
             "Zagara", "Zeratul"};
 
+    int portraits[] = {R.drawable.abathur, R.drawable.anubarak, R.drawable.arthas,
+            R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
+            R.drawable.diablo, R.drawable.elite_tauren_chieftain, R.drawable.falstad,
+            R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
+            R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan,
+            R.drawable.li_li, R.drawable.malfurion, R.drawable.muradin,
+            R.drawable.murky, R.drawable.nazeebo, R.drawable.nova,
+            R.drawable.raynor, R.drawable.rehgar, R.drawable.sergeant_hammer,
+            R.drawable.sonya, R.drawable.stitches, R.drawable.sylvanas,
+            R.drawable.tassadar, R.drawable.the_butcher, R.drawable.the_lost_vikings,
+            R.drawable.thrall, R.drawable.tychus, R.drawable.tyrael, R.drawable.tyrande,
+            R.drawable.uther, R.drawable.valla, R.drawable.zagara,
+            R.drawable.zeratul};
+
     PopupWindow popupWindow;
     ExpandableListView expandList;
     ArrayList<String> outList = new ArrayList<>();
     HeroDatabase db = new HeroDatabase(this);
-
-    // Get response from web
-    JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
-        @Override
-        public void processFinish(ArrayList<String> output) {
-            outList.addAll(output);
-        }
-    });
+    private JSoupTalker talker = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        expandList = (ExpandableListView) findViewById(R.id.expandableList);
-        findViewById(R.id.layout).post(new Runnable() {
-            @Override
-            public void run() {
-                popupWindow = showOptionsAtStart();
-                popupWindow.showAtLocation(findViewById(R.id.layout), CENTER, 0, 0);
+
+        SharedPreferences settings = this.getSharedPreferences("appInfo", 0);
+        boolean firstTime = settings.getBoolean("first_time", true);
+        if (firstTime) {
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("first_time", false);
+            editor.apply();
+            if(talker == null) {
+                // Get response from web
+                JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
+                    @Override
+                    public void processFinish(ArrayList<String> output) {
+                        outList.addAll(output);
+                    }
+                });
+                talker.execute();
             }
-        });
+        } else {
+            expandList = (ExpandableListView) findViewById(R.id.expandableList);
+            ArrayList<Heroes> initList = setHeroes();
+            CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, initList);
+            expandList.setAdapter(customAdapt);
+        }
     }
 
         @Override
@@ -86,6 +109,18 @@ public class MainActivity extends AppCompatActivity {
             popupWindow = showInfoPopup();
             popupWindow.showAtLocation(findViewById(R.id.expandableList), CENTER, 0, 15);
             return true;
+        } if(id == R.id.action_refresh) {
+            this.deleteDatabase("heroes");
+            if(talker == null) {
+                // Get response from web
+                JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
+                    @Override
+                    public void processFinish(ArrayList<String> output) {
+                        outList.addAll(output);
+                    }
+                });
+                talker.execute();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -98,19 +133,6 @@ public class MainActivity extends AppCompatActivity {
      * @return ArrayList for expandableList
      */
     public ArrayList<Heroes> setHeroes() {
-        int portraits[] = {R.drawable.abathur, R.drawable.anubarak, R.drawable.arthas,
-                R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
-                R.drawable.diablo, R.drawable.elite_tauren_chieftain, R.drawable.falstad,
-                R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
-                R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan,
-                R.drawable.li_li, R.drawable.malfurion, R.drawable.muradin,
-                R.drawable.murky, R.drawable.nazeebo, R.drawable.nova,
-                R.drawable.raynor, R.drawable.rehgar, R.drawable.sergeant_hammer,
-                R.drawable.sonya, R.drawable.stitches, R.drawable.sylvanas,
-                R.drawable.tassadar, R.drawable.the_butcher, R.drawable.the_lost_vikings,
-                R.drawable.thrall, R.drawable.tychus, R.drawable.tyrael, R.drawable.tyrande,
-                R.drawable.uther, R.drawable.valla, R.drawable.zagara,
-                R.drawable.zeratul};
 
         ArrayList<Heroes> list = new ArrayList<>();
         //populate the expandable list with the heroes
@@ -313,34 +335,6 @@ public class MainActivity extends AppCompatActivity {
         return popupWindow;
     }
 
-    public PopupWindow showOptionsAtStart() {
-        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.options, new LinearLayout(getBaseContext()), false);
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        Button btnUpdate = (Button)popupView.findViewById(R.id.button_update);
-        btnUpdate.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getApplicationContext().deleteDatabase("heroes");
-                talker.execute();
-                popupWindow.dismiss();
-            }
-        });
-
-        Button btnOffline = (Button)popupView.findViewById(R.id.button_offline);
-        btnOffline.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<Heroes> heroList = setHeroes();
-                CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, heroList);
-                expandList.setAdapter(customAdapt);
-                popupWindow.dismiss();
-            }
-        });
-        return popupWindow;
-    }
-
     /**
      * JSoup is used to get website data from hotslogs.com
      * This info will be thrown to the Database once acquired
@@ -440,10 +434,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             //build the list and set the adapter with our custom one
+            expandList = (ExpandableListView) findViewById(R.id.expandableList);
             ArrayList<Heroes> heroList = setHeroes();
             CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, heroList);
             expandList.setAdapter(customAdapt);
-
+            talker = null;
             if (pd != null) {
                 pd.dismiss();
             }

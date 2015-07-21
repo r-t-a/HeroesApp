@@ -6,4 +6,6 @@
     <string name="default_text">TextView</string>
     <string name="button_text">Cool</string>
     <string name="info_text">An app for players that want a quick and dirty view of the popular skills to pick for each hero without guide researching.\n\nThe skills for the heroes are based on their popularity from hotslogs.com.\n\nThis will be updated as HOTS updates occur and popular skills change.</string>
+    <string name="update_button">Update</string>
+    <string name="offline_button">Offline</string>
 </resources>
