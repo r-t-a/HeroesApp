@@ -2,6 +2,9 @@ package com.ryan.heroestopbuilds;
 
 
 /**
+ * This gets thrown into the SQLite Database
+ * which all we care about are the specific skills for the hero
+ *
  * @author ryan
  */
 public class StoredSkills {

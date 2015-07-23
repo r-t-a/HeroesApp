@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-        @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -314,8 +314,6 @@ public class MainActivity extends AppCompatActivity {
      * 3 dot menu
      *
      * @return popupWindow
-     *
-     * TODO: Add HOTS update version number or name ie. "Johanna Update"
      */
     public PopupWindow showInfoPopup() {
         LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -380,7 +378,6 @@ public class MainActivity extends AppCompatActivity {
 
                     //get the table
                     Element table = doc.getElementsByTag("table").get(2);
-
                     for (Element row : table.select("tr")) {
                         Elements cols = row.select("td");
                         if(cols.size() > 10) {

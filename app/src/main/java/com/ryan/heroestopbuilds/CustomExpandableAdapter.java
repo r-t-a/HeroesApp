@@ -56,7 +56,11 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     @Override
     public int getChildrenCount(int groupPosition) {
         ArrayList<Skills>skillsArrayList = heroes.get(groupPosition).getSkills();
-        return skillsArrayList.size();
+        if(skillsArrayList.size() == 0) {
+            return 0;
+        } else {
+            return skillsArrayList.size();
+        }
     }
 
     @Override
