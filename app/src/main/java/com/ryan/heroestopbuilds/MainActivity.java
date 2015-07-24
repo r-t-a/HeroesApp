@@ -1,7 +1,10 @@
 package com.ryan.heroestopbuilds;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +18,8 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -66,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private JSoupTalker talker = null;
     private ProgressDialog pd = null;
     private final String TAG = null;
+    String internetWarning = "No Internet Connection Detected";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean("first_time", false);
             editor.apply();
-            if(talker == null) {
+            if(talker == null && isNetworkAvailable()) {
                 // Get response from web
                 JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
                     @Override
@@ -120,19 +126,30 @@ public class MainActivity extends AppCompatActivity {
             popupWindow.showAtLocation(findViewById(R.id.expandableList), CENTER, 0, 15);
             return true;
         } if(id == R.id.action_refresh) {
-            this.deleteDatabase("heroes");
-            if(talker == null) {
-                // Get response from web
-                JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
-                    @Override
-                    public void processFinish(ArrayList<String> output) {
-                        outList.addAll(output);
-                    }
-                });
-                talker.execute();
+            if(!isNetworkAvailable()) {
+                Toast toast = Toast.makeText(this,internetWarning, Toast.LENGTH_LONG);
+                toast.show();
+            } else {
+                this.deleteDatabase("heroes");
+                if (talker == null) {
+                    // Get response from web
+                    JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
+                        @Override
+                        public void processFinish(ArrayList<String> output) {
+                            outList.addAll(output);
+                        }
+                    });
+                    talker.execute();
+                }
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnected();
     }
 
     /**
@@ -317,9 +334,9 @@ public class MainActivity extends AppCompatActivity {
                         skillList.add(skills);
                         break;
                 }
+                hero.setSkills(skillList);
+                list.add(hero);
             }
-            hero.setSkills(skillList);
-            list.add(hero);
         }
         return list;
     }
@@ -365,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                if(talker == null) {
+                if (talker == null && isNetworkAvailable()) {
                     // Get response from web
                     JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
                         @Override
@@ -374,6 +391,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     talker.execute();
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), internetWarning, Toast.LENGTH_LONG);
+                    toast.show();
                 }
             }
         });
