@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> outList = new ArrayList<>();
     HeroDatabase db = new HeroDatabase(this);
     private JSoupTalker talker = null;
+    private ProgressDialog pd = null;
+    private final String TAG = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,14 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<Heroes> initList = setHeroes();
             CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, initList);
             expandList.setAdapter(customAdapt);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(pd != null) {
+            pd.dismiss();
         }
     }
 
@@ -149,159 +159,164 @@ public class MainActivity extends AppCompatActivity {
             Skills skills = new Skills();
 
             List<String> storedSkills = db.getAllHeroes();
-            switch (hero_names[i]) {
-                 case "Abathur":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Anub'arak":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Arthas":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Azmodan":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Brightwing":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Chen":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Diablo":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "E.T.C.":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Falstad":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Gazlowe":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Illidan":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Jaina":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Johanna":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Kaelthas":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Kerrigan":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Li Li":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Malfurion":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Muradin":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Murky":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Nazeebo":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Nova":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Rehgar":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Raynor":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Sgt. Hammer":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Sonya":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Stitches":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Sylvanas":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Tassadar":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "The Butcher":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "The Lost Vikings":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Thrall":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Tychus":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Tyrael":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Tyrande":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Uther":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Valla":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Zagara":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
-                case "Zeratul":
-                    skills.setName(storedSkills.get(i));
-                    skillList.add(skills);
-                    break;
+            if(storedSkills.size() == 0) {
+                popupWindow = showError();
+                Log.e(TAG, "Disconnection error, refreshing skills");
+            } else {
+                switch (hero_names[i]) {
+                    case "Abathur":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Anub'arak":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Arthas":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Azmodan":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Brightwing":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Chen":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Diablo":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "E.T.C.":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Falstad":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Gazlowe":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Illidan":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Jaina":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Johanna":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Kaelthas":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Kerrigan":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Li Li":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Malfurion":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Muradin":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Murky":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Nazeebo":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Nova":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Rehgar":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Raynor":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Sgt. Hammer":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Sonya":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Stitches":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Sylvanas":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Tassadar":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "The Butcher":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "The Lost Vikings":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Thrall":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Tychus":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Tyrael":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Tyrande":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Uther":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Valla":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Zagara":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Zeratul":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                }
             }
             hero.setSkills(skillList);
             list.add(hero);
@@ -334,18 +349,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Handle cases of random disconnects so the Database doesn't get filled.
+     *
+     * @return popupWindow
+     */
+    public PopupWindow showError() {
+        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View popupView = layoutInflater.inflate(R.layout.alert_refresh, new LinearLayout(getBaseContext()), false);
+        final PopupWindow popupWindow = new PopupWindow(
+                popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+        Button btnDismiss = (Button)popupView.findViewById(R.id.buttonRefresh);
+        btnDismiss.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                if(talker == null) {
+                    // Get response from web
+                    JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
+                        @Override
+                        public void processFinish(ArrayList<String> output) {
+                            outList.addAll(output);
+                        }
+                    });
+                    talker.execute();
+                }
+            }
+        });
+        return popupWindow;
+    }
+
+    /**
      * JSoup is used to get website data from hotslogs.com
      * This info will be thrown to the Database once acquired
      * to keep it up to date
      */
     private class JSoupTalker extends AsyncTask<Void, Void, ArrayList<String>> {
 
-        private final String TAG = null;
         private AsyncResponse listener;
         ArrayList<String> passList = new ArrayList<>();
         String popularString = null;
         String convert = null;
-        private ProgressDialog pd = null;
         String url = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=";
 
         public JSoupTalker(AsyncResponse listener) {
@@ -354,14 +399,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-            if (pd == null) {
-                pd = new ProgressDialog(MainActivity.this);
-                pd.setMessage("Gathering Popular Builds");
-                pd.setCancelable(false);
-                pd.show();
-            }
             Log.i(TAG, "PreExecute");
+            pd = new ProgressDialog(MainActivity.this);
+            pd.setMessage("Gathering Popular Builds");
+            pd.setCancelable(false);
+            pd.show();
         }
 
         @Override
@@ -370,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
             Document doc;
             try {
                 for (String aHero: hero_names) {
-                    ArrayList<Float> gamesPlayed = new ArrayList<>();
+                    ArrayList<Integer> gamesPlayed = new ArrayList<>();
                     ArrayList<String> skillNames = new ArrayList<>();
                     ArrayList<String> popularSkills;
 
@@ -381,14 +423,23 @@ public class MainActivity extends AppCompatActivity {
                     for (Element row : table.select("tr")) {
                         Elements cols = row.select("td");
                         if(cols.size() > 10) {
-                            String values = cols.get(0).text().replaceAll("%", "").trim();
+                            gamesPlayed.add(Integer.valueOf(cols.get(0).text()));
+                            Integer popular = Collections.max(gamesPlayed);
 
-                            gamesPlayed.add(Float.valueOf(values));
+                            //************* in case of emergency, break glass ****************************
+                            //************* meaning, swap out this with integer code *********************
+                            //************* meaning, hotslogs changed their table code :( ****************
+                            //************* meaning, rip me **********************************************
+                            //************* refactor to account for these changes ************************
+                            //
+                            //String values = cols.get(0).text().replaceAll("%", "").trim();
+                            //gamesPlayed.add(Float.valueOf(values));
                             //get the largest games played value, this is the most popular
-                            Float popular = Collections.max(gamesPlayed);
-                            popularString = popular.toString();
+                            //Float popular = Collections.max(gamesPlayed);
+                            //****************************************************************************
 
-                            if (values.equals(popularString)) {
+                            popularString = popular.toString();
+                            if (cols.get(0).text().equals(popularString)) {
                                 //add to new array
                                 skillNames.add(row.text());
                             }
@@ -400,9 +451,9 @@ public class MainActivity extends AppCompatActivity {
                             convert = eval;
                         }
                     }
-
                     //split that long string up and put it into a list
                     popularSkills = new ArrayList<>(Arrays.asList(convert.split(" ")));
+                    popularSkills.remove(0);  //remove games play #
                     popularSkills.remove(0);  //removing win percent #
                     popularSkills.remove(0);  //removing % sign
                     //add our final list to a new list to be passed to MainActivity
@@ -436,9 +487,7 @@ public class MainActivity extends AppCompatActivity {
             CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, heroList);
             expandList.setAdapter(customAdapt);
             talker = null;
-            if (pd != null) {
-                pd.dismiss();
-            }
+            pd.dismiss();
         }
     }
 }
