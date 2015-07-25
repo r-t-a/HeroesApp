@@ -177,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
 
             List<String> storedSkills = db.getAllHeroes();
             if(storedSkills.size() == 0) {
-                popupWindow = showError();
+                Toast toast = Toast.makeText(this, internetWarning, Toast.LENGTH_LONG);
+                toast.show();
                 Log.e(TAG, "Disconnection error, refreshing skills");
             } else {
                 switch (hero_names[i]) {
@@ -360,41 +361,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // dismiss dialog window
                 popupWindow.dismiss();
-            }
-        });
-        return popupWindow;
-    }
-
-    /**
-     * Handle cases of random disconnects so the Database doesn't get filled.
-     *
-     * @return popupWindow
-     */
-    public PopupWindow showError() {
-        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.alert_refresh, new LinearLayout(getBaseContext()), false);
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-
-        Button btnDismiss = (Button)popupView.findViewById(R.id.buttonRefresh);
-        btnDismiss.setOnClickListener(new Button.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                if (talker == null && isNetworkAvailable()) {
-                    // Get response from web
-                    JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
-                        @Override
-                        public void processFinish(ArrayList<String> output) {
-                            outList.addAll(output);
-                        }
-                    });
-                    talker.execute();
-                } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), internetWarning, Toast.LENGTH_LONG);
-                    toast.show();
-                }
             }
         });
         return popupWindow;
