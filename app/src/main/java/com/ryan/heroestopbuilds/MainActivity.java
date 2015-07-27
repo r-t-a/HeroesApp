@@ -93,6 +93,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 talker.execute();
+            } else {
+                Toast toast = Toast.makeText(this,internetWarning, Toast.LENGTH_LONG);
+                toast.show();
+                expandList = (ExpandableListView) findViewById(R.id.expandableList);
+                ArrayList<Heroes> offlineList = offlineTempList();
+                CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, offlineList);
+                expandList.setAdapter(customAdapt);
             }
         } else {
             expandList = (ExpandableListView) findViewById(R.id.expandableList);
@@ -146,10 +153,41 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Make sure the device is connected when refreshing/initial populating
+     *
+     * @return activeNetwork
+     */
     private boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnected();
+    }
+
+    /**
+     * Purely for visual, so if offline on initial load the user doesn't just
+     * see a blank screen, at least populate the hero list since its
+     * hard coded.
+     *
+     * @return offline list (error with network or disconnect)
+     */
+    public ArrayList<Heroes> offlineTempList() {
+        ArrayList<Heroes> list = new ArrayList<>();
+        //populate the expandable list with the heroes
+        for (int i = 0; i < hero_names.length; i++) {
+            Heroes hero = new Heroes();
+            //set name and portrait
+            hero.setName(hero_names[i]);
+            hero.setPortrait(portraits[i]);
+            ArrayList<Skills> skillList = new ArrayList<>();
+            Skills skills = new Skills();
+            skills.setName("Looks like we didn't get the skills, check internet connection and try refreshing");
+            skillList.add(skills);
+            hero.setSkills(skillList);
+            list.add(hero);
+
+        }
+        return list;
     }
 
     /**
@@ -462,7 +500,7 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0; i < hero_names.length; i++) {
                 String format = outList.get(i)
                         .replace(",", "\n")
-                        .replace("[", "")
+                        .replace("[", " ")
                         .replace("]", "");
                 db.addHero(new StoredSkills(format));
             }
