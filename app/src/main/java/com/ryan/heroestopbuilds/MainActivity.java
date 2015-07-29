@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     String hero_names[] = {"Abathur", "Anub'arak", "Arthas", "Azmodan", "Brightwing", "Chen",
             "Diablo", "E.T.C.", "Falstad", "Gazlowe", "Illidan", "Jaina",
-            "Johanna", "Kaelthas", "Kerrigan", "Li Li", "Malfurion", "Muradin",
+            "Johanna", "Kaelthas", "Kerrigan", "Li Li", "Leoric", "Malfurion", "Muradin",
             "Murky", "Nazeebo", "Nova", "Raynor", "Rehgar", "Sgt. Hammer",
             "Sonya", "Stitches", "Sylvanas", "Tassadar", "The Butcher", "The Lost Vikings",
             "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
             R.drawable.diablo, R.drawable.elite_tauren_chieftain, R.drawable.falstad,
             R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
-            R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan,
+            R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan, R.drawable.leoric,
             R.drawable.li_li, R.drawable.malfurion, R.drawable.muradin,
             R.drawable.murky, R.drawable.nazeebo, R.drawable.nova,
             R.drawable.raynor, R.drawable.rehgar, R.drawable.sergeant_hammer,
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Purely for visual, so if offline on initial load the user doesn't just
-     * see a blank screen, at least populate the hero list since its
+     * see a blank screen, at least populate the hero list since it's
      * hard coded.
      *
      * @return offline list (error with network or disconnect)
@@ -181,11 +181,12 @@ public class MainActivity extends AppCompatActivity {
             hero.setPortrait(portraits[i]);
             ArrayList<Skills> skillList = new ArrayList<>();
             Skills skills = new Skills();
-            skills.setName("Looks like we didn't get the skills, check internet connection and try refreshing");
+            skills.setName("Looks like we didn't get the skills,\n" +
+                           "check your internet connection\n" +
+                           "and try refreshing");
             skillList.add(skills);
             hero.setSkills(skillList);
             list.add(hero);
-
         }
         return list;
     }
