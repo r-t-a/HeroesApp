@@ -135,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(this,internetWarning, Toast.LENGTH_LONG);
                 toast.show();
             } else {
-                this.deleteDatabase("heroes");
+                this.deleteDatabase("heroDatabase");
+                db = new HeroDatabase(this);
                 if (talker == null) {
                     // Get response from web
                     JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
