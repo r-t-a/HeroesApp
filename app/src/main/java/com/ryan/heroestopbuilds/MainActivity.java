@@ -34,9 +34,10 @@ import static android.view.Gravity.CENTER;
 
 /**
  * Simple activity that will handle the ExpandableListView
- * after getting the recent skills from AsyncTask, this
- * will be done once and auto update every week or so (still
- * deciding on that)
+ * after getting the recent skills from AsyncTask, user can
+ * refresh when he/she pleases to through the menu option,
+ * this will delete the database and create a new one to store
+ * new skills
  *
  * @author ryan
  */
@@ -110,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        //make sure to check for active ui stuff that we
+        //need to close
         if(pd != null) {
             pd.dismiss();
         }
@@ -125,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             popupWindow = showInfoPopup();
             popupWindow.showAtLocation(findViewById(R.id.expandableList), CENTER, 0, 15);
@@ -135,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(this,internetWarning, Toast.LENGTH_LONG);
                 toast.show();
             } else {
+                //delete db and create a new instance of it
                 this.deleteDatabase("heroDatabase");
                 db = new HeroDatabase(this);
                 if (talker == null) {
@@ -406,6 +409,15 @@ public class MainActivity extends AppCompatActivity {
         return popupWindow;
     }
 
+    public static boolean isInt(String s){
+        for(int i = 0; i < s.length(); i++){
+            if(!Character.isDigit(s.charAt(i))){
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * JSoup is used to get website data from hotslogs.com
      * This info will be thrown to the Database once acquired
@@ -432,13 +444,13 @@ public class MainActivity extends AppCompatActivity {
             pd.show();
         }
 
+        //todo cleanup
         @Override
         protected ArrayList<String> doInBackground(Void...params) {
             Log.i(TAG, "InBackground");
             Document doc;
             try {
                 for (String aHero: hero_names) {
-                    ArrayList<Integer> gamesPlayed = new ArrayList<>();
                     ArrayList<String> skillNames = new ArrayList<>();
                     ArrayList<String> popularSkills;
 
@@ -449,25 +461,26 @@ public class MainActivity extends AppCompatActivity {
                     for (Element row : table.select("tr")) {
                         Elements cols = row.select("td");
                         if(cols.size() > 10) {
-                            gamesPlayed.add(Integer.valueOf(cols.get(0).text()));
-                            Integer popular = Collections.max(gamesPlayed);
-
-                            //************* in case of emergency, break glass ****************************
-                            //************* meaning, swap out this with integer code *********************
-                            //************* meaning, hotslogs changed their table code :( ****************
-                            //************* meaning, rip me **********************************************
-                            //************* refactor to account for these changes ************************
-                            //
-                            //String values = cols.get(0).text().replaceAll("%", "").trim();
-                            //gamesPlayed.add(Float.valueOf(values));
-                            //get the largest games played value, this is the most popular
-                            //Float popular = Collections.max(gamesPlayed);
-                            //****************************************************************************
-
-                            popularString = popular.toString();
-                            if (cols.get(0).text().equals(popularString)) {
-                                //add to new array
-                                skillNames.add(row.text());
+                            if(isInt(cols.get(0).text()))  {
+                                ArrayList<Integer> gamesInt = new ArrayList<>();
+                                gamesInt.add(Integer.valueOf(cols.get(0).text()));
+                                Integer popular = Collections.max(gamesInt);
+                                popularString = popular.toString();
+                                if (cols.get(0).text().equals(popularString)) {
+                                    //add to new array
+                                    skillNames.add(row.text());
+                                }
+                            } else {
+                                ArrayList<Float> gamesFloat = new ArrayList<>();
+                                String values = cols.get(0).text().replaceAll("%", "").trim();
+                                gamesFloat.add(Float.valueOf(values));
+                                //get the largest games played value, this is the most popular
+                                Float popular = Collections.max(gamesFloat);
+                                popularString = popular.toString();
+                                if (cols.get(0).text().equals(popularString)) {
+                                    //add to new array
+                                    skillNames.add(row.text());
+                                }
                             }
                         }
                     }
