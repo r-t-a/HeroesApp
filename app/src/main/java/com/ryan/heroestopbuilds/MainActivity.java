@@ -94,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 });
                 talker.execute();
             } else {
-                Toast toast = Toast.makeText(this,internetWarning, Toast.LENGTH_LONG);
-                toast.show();
                 expandList = (ExpandableListView) findViewById(R.id.expandableList);
                 ArrayList<Heroes> offlineList = offlineTempList();
                 CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, offlineList);
@@ -216,9 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
             List<String> storedSkills = db.getAllHeroes();
             if(storedSkills.size() == 0) {
-                Toast toast = Toast.makeText(this, internetWarning, Toast.LENGTH_LONG);
-                toast.show();
-                Log.e(TAG, "Disconnection error, refreshing skills");
+                return offlineTempList();
             } else {
                 switch (hero_names[i]) {
                     case "Abathur":
