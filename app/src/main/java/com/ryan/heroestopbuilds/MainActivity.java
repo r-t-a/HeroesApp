@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     String hero_names[] = {"Abathur", "Anub'arak", "Arthas", "Azmodan", "Brightwing", "Chen",
             "Diablo", "E.T.C.", "Falstad", "Gazlowe", "Illidan", "Jaina",
-            "Johanna", "Kaelthas", "Kerrigan", "Li Li", "Leoric", "Malfurion", "Muradin",
+            "Johanna", "Kaelthas", "Kerrigan", "Leoric", "Li Li", "Malfurion", "Muradin",
             "Murky", "Nazeebo", "Nova", "Raynor", "Rehgar", "Sgt. Hammer",
             "Sonya", "Stitches", "Sylvanas", "Tassadar", "The Butcher", "The Lost Vikings",
             "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
@@ -274,6 +274,10 @@ public class MainActivity extends AppCompatActivity {
                         skillList.add(skills);
                         break;
                     case "Kerrigan":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Leoric":
                         skills.setName(storedSkills.get(i));
                         skillList.add(skills);
                         break;
