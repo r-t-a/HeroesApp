@@ -444,7 +444,6 @@ public class MainActivity extends AppCompatActivity {
             pd.show();
         }
 
-        //todo cleanup
         @Override
         protected ArrayList<String> doInBackground(Void...params) {
             Log.i(TAG, "InBackground");
@@ -453,6 +452,7 @@ public class MainActivity extends AppCompatActivity {
                 for (String aHero: hero_names) {
                     ArrayList<String> skillNames = new ArrayList<>();
                     ArrayList<Integer> gamesInt = new ArrayList<>();
+                    ArrayList<Float> gamesFloat = new ArrayList<>();
                     ArrayList<String> popularSkills;
 
                     doc = Jsoup.connect(url + aHero).maxBodySize(0).get();
@@ -471,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
                                     skillNames.add(row.text());
                                 }
                             } else {
-                                colIsString();
+                                return colIsString(gamesFloat);
                             }
                         }
                     }
@@ -531,7 +531,7 @@ public class MainActivity extends AppCompatActivity {
          * Saw it once in testing so better safe than sorry to include it
          * Basically col.get(0).text() returns the win percentage, not games played.
          */
-        public void colIsString() {
+        public ArrayList<String> colIsString(ArrayList<Float> gamesFloat) {
             Document doc;
             try {
                 for (String aHero : hero_names) {
@@ -545,7 +545,6 @@ public class MainActivity extends AppCompatActivity {
                     for (Element row : table.select("tr")) {
                         Elements cols = row.select("td");
                         if (cols.size() > 10) {
-                            ArrayList<Float> gamesFloat = new ArrayList<>();
                             String values = cols.get(0).text().replaceAll("%", "").trim();
                             gamesFloat.add(Float.valueOf(values));
                             //get the largest games played value, this is the most popular
@@ -576,6 +575,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return null;
         }
     }
 }
