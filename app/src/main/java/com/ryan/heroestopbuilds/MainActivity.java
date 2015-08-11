@@ -95,8 +95,9 @@ public class MainActivity extends AppCompatActivity {
                 });
                 talker.execute();
             } else {
+                OfflineBackup offline = new OfflineBackup();
                 expandList = (ExpandableListView) findViewById(R.id.expandableList);
-                ArrayList<Heroes> offlineList = offlineTempList();
+                ArrayList<Heroes> offlineList = offline.offlineTempList();
                 CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, offlineList);
                 expandList.setAdapter(customAdapt);
             }
@@ -167,33 +168,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Purely for visual, so if offline on initial load the user doesn't just
-     * see a blank screen, at least populate the hero list since it's
-     * hard coded.
-     *
-     * @return offline list (error with network or disconnect)
-     */
-    public ArrayList<Heroes> offlineTempList() {
-        ArrayList<Heroes> list = new ArrayList<>();
-        //populate the expandable list with the heroes
-        for (int i = 0; i < hero_names.length; i++) {
-            Heroes hero = new Heroes();
-            //set name and portrait
-            hero.setName(hero_names[i]);
-            hero.setPortrait(portraits[i]);
-            ArrayList<Skills> skillList = new ArrayList<>();
-            Skills skills = new Skills();
-            skills.setName("Looks like we didn't get the skills,\n" +
-                           "check your internet connection\n" +
-                           "and try refreshing");
-            skillList.add(skills);
-            hero.setSkills(skillList);
-            list.add(hero);
-        }
-        return list;
-    }
-
-    /**
      * Make the Expandable List and gather the current
      * popular build skills from hotslogs to populate the
      * children views.
@@ -218,7 +192,8 @@ public class MainActivity extends AppCompatActivity {
 
             List<String> storedSkills = db.getAllHeroes();
             if(storedSkills.size() == 0) {
-                return offlineTempList();
+                OfflineBackup offline = new OfflineBackup();
+                return offline.offlineTempList();
             } else {
                 switch (hero_names[i]) {
                     case "Abathur":
@@ -505,8 +480,9 @@ public class MainActivity extends AppCompatActivity {
 
             for(int i = 0; i < hero_names.length; i++) {
                 if(outList.get(i).length() == 0) {
+                    OfflineBackup offline = new OfflineBackup();
                     expandList = (ExpandableListView) findViewById(R.id.expandableList);
-                    ArrayList<Heroes> offlineList = offlineTempList();
+                    ArrayList<Heroes> offlineList = offline.offlineTempList();
                     CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, offlineList);
                     expandList.setAdapter(customAdapt);
                 }
