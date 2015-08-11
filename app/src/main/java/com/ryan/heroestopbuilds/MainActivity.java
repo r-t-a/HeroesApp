@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     String hero_names[] = {"Abathur", "Anub'arak", "Arthas", "Azmodan", "Brightwing", "Chen",
             "Diablo", "E.T.C.", "Falstad", "Gazlowe", "Illidan", "Jaina",
-            "Johanna", "Kaelthas", "Kerrigan", "Leoric", "Li Li", "Malfurion", "Muradin",
+            "Johanna", "Kael'thas", "Kerrigan", "Leoric", "Li Li", "Malfurion", "Muradin",
             "Murky", "Nazeebo", "Nova", "Raynor", "Rehgar", "Sgt. Hammer",
             "Sonya", "Stitches", "Sylvanas", "Tassadar", "The Butcher", "The Lost Vikings",
             "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                         skills.setName(storedSkills.get(i));
                         skillList.add(skills);
                         break;
-                    case "Kaelthas":
+                    case "Kael'thas":
                         skills.setName(storedSkills.get(i));
                         skillList.add(skills);
                         break;
@@ -510,10 +510,20 @@ public class MainActivity extends AppCompatActivity {
                     CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, offlineList);
                     expandList.setAdapter(customAdapt);
                 }
+                //Pretty print from html with a few annoying edge cases
                 String format = outList.get(i)
                         .replace(",", "\n")
                         .replace("[", " ")
-                        .replace("]", "");
+                        .replace("]", "")
+                        .replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2")
+                        .replace("of", " of ")
+                        .replace("for", " for ")
+                        .replace("the", " the ")
+                        .replace("Ga the ring", "Gathering")
+                        .replace("Likea", "Like a")
+                        .replace("Nor the rn", "Northern")
+                        .replace("Stone for m", "Stoneform")
+                        .replace("AShark", "A Shark");
                 db.addHero(new StoredSkills(format));
             }
 
