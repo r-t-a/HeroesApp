@@ -13,7 +13,7 @@ public class OfflineBackup {
 
     String hero_names[] = {"Abathur", "Anub'arak", "Arthas", "Azmodan", "Brightwing", "Chen",
             "Diablo", "E.T.C.", "Falstad", "Gazlowe", "Illidan", "Jaina",
-            "Johanna", "Kael'thas", "Kerrigan", "Leoric", "Li Li", "Malfurion", "Muradin",
+            "Johanna", "Kael'thas", "Kerrigan", "Kharazim", "Leoric", "Li Li", "Malfurion", "Muradin",
             "Murky", "Nazeebo", "Nova", "Raynor", "Rehgar", "Sgt. Hammer",
             "Sonya", "Stitches", "Sylvanas", "Tassadar", "The Butcher", "The Lost Vikings",
             "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
@@ -23,7 +23,7 @@ public class OfflineBackup {
             R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
             R.drawable.diablo, R.drawable.elite_tauren_chieftain, R.drawable.falstad,
             R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
-            R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan, R.drawable.leoric,
+            R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan, R.drawable.kharazim, R.drawable.leoric,
             R.drawable.li_li, R.drawable.malfurion, R.drawable.muradin,
             R.drawable.murky, R.drawable.nazeebo, R.drawable.nova,
             R.drawable.raynor, R.drawable.rehgar, R.drawable.sergeant_hammer,
@@ -69,12 +69,14 @@ public class OfflineBackup {
     String johanna[]  = {"Knight Takes Pawn", "Laws of Hope", "Battle Momentum",
              "Blessed Shield", "Burning Rage", "Blessed Hammer",
              "Indestructible"};
-    String kaelthas[] = {"Mana Addict", "Gathering Power", "Fission Bomb",
+    String kaelthas[] = {"Mana Addict", "Nether Wind", "Fission Bomb",
              "Phoenix", "Flamethrower", "Ignite",
              "Bolt of the Storm"};
     String kerrigan[] = {"Sweeping Grasp", "Envenom", "Battle Momentum",
              "Maelstrom", "Sprint", "Blood for Blood",
              "Bolt of the Storm"};
+    String kharazim[] = {"Transcendence", "Protective Shield", "Echo of Heaven", "Divine Palm",
+            "Fists of Fury", "Soothing Breeze", "Storm Shield"};
     String leoric[] = {"Reanimation", "Fealty Unto Death", "Ossein Renewal", "March of the Black King",
               "Crushing Hope", "Consume Vitality", "Death March"};
     String lili[]     = {"Timeless Creature", "Mending Serpent", "Lightning Serpent",
@@ -225,6 +227,10 @@ public class OfflineBackup {
                         break;
                     case "Kerrigan":
                         skills.setName(kerrigan[j]);
+                        skillList.add(skills);
+                        break;
+                    case "Kharazim":
+                        skills.setName(kharazim[j]);
                         skillList.add(skills);
                         break;
                     case "Leoric":

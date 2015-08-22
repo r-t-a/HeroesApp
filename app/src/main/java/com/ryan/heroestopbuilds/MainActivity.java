@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     String hero_names[] = {"Abathur", "Anub'arak", "Arthas", "Azmodan", "Brightwing", "Chen",
             "Diablo", "E.T.C.", "Falstad", "Gazlowe", "Illidan", "Jaina",
-            "Johanna", "Kael'thas", "Kerrigan", "Leoric", "Li Li", "Malfurion", "Muradin",
+            "Johanna", "Kael'thas", "Kerrigan", "Kharazim", "Leoric", "Li Li", "Malfurion", "Muradin",
             "Murky", "Nazeebo", "Nova", "Raynor", "Rehgar", "Sgt. Hammer",
             "Sonya", "Stitches", "Sylvanas", "Tassadar", "The Butcher", "The Lost Vikings",
             "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
             R.drawable.diablo, R.drawable.elite_tauren_chieftain, R.drawable.falstad,
             R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
-            R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan, R.drawable.leoric,
+            R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan, R.drawable.kharazim, R.drawable.leoric,
             R.drawable.li_li, R.drawable.malfurion, R.drawable.muradin,
             R.drawable.murky, R.drawable.nazeebo, R.drawable.nova,
             R.drawable.raynor, R.drawable.rehgar, R.drawable.sergeant_hammer,
@@ -191,6 +191,10 @@ public class MainActivity extends AppCompatActivity {
             Skills skills = new Skills();
 
             List<String> storedSkills = db.getAllHeroes();
+            if(storedSkills.size() < hero_names.length) {
+                OfflineBackup offline = new OfflineBackup();
+                return offline.offlineTempList();
+            }
             if(storedSkills.size() == 0) {
                 OfflineBackup offline = new OfflineBackup();
                 return offline.offlineTempList();
@@ -253,6 +257,10 @@ public class MainActivity extends AppCompatActivity {
                         skillList.add(skills);
                         break;
                     case "Kerrigan":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Kharazim":
                         skills.setName(storedSkills.get(i));
                         skillList.add(skills);
                         break;
@@ -499,7 +507,9 @@ public class MainActivity extends AppCompatActivity {
                         .replace("Likea", "Like a")
                         .replace("Nor the rn", "Northern")
                         .replace("Stone for m", "Stoneform")
-                        .replace("AShark", "A Shark");
+                        .replace("AShark", "A Shark")
+                        .replace("Ne the r", "Nether")
+                        .replace("Grav OBomb3000", "Grav O Bomb 3000");
                 db.addHero(new StoredSkills(format));
             }
 
