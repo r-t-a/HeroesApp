@@ -195,6 +195,11 @@ public class MainActivity extends AppCompatActivity {
                 OfflineBackup offline = new OfflineBackup();
                 return offline.offlineTempList();
             }
+            if(storedSkills.get(0).contains("Unknown Talent")) {
+                Log.e(TAG, "Unknown Talent Found");
+                OfflineBackup offline = new OfflineBackup();
+                return offline.offlineTempList();
+            }
             if(storedSkills.size() == 0) {
                 OfflineBackup offline = new OfflineBackup();
                 return offline.offlineTempList();
@@ -392,15 +397,6 @@ public class MainActivity extends AppCompatActivity {
         return popupWindow;
     }
 
-    public static boolean isInt(String s){
-        for(int i = 0; i < s.length(); i++){
-            if(!Character.isDigit(s.charAt(i))){
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * JSoup is used to get website data from hotslogs.com
      * This info will be thrown to the Database once acquired
@@ -435,7 +431,6 @@ public class MainActivity extends AppCompatActivity {
                 for (String aHero: hero_names) {
                     ArrayList<String> skillNames = new ArrayList<>();
                     ArrayList<Integer> gamesInt = new ArrayList<>();
-                    ArrayList<Float> gamesFloat = new ArrayList<>();
                     ArrayList<String> popularSkills;
 
                     doc = Jsoup.connect(url + aHero).maxBodySize(0).get();
@@ -445,16 +440,12 @@ public class MainActivity extends AppCompatActivity {
                     for (Element row : table.select("tr")) {
                         Elements cols = row.select("td");
                         if(cols.size() > 10) {
-                            if(isInt(cols.get(0).text()))  {
-                                gamesInt.add(Integer.valueOf(cols.get(0).text()));
-                                Integer popular = Collections.max(gamesInt);
-                                popularString = popular.toString();
-                                if (cols.get(0).text().equals(popularString)) {
-                                    //add to new array
-                                    skillNames.add(row.text());
-                                }
-                            } else {
-                                return colIsString(gamesFloat);
+                            gamesInt.add(Integer.valueOf(cols.get(0).text()));
+                            Integer popular = Collections.max(gamesInt);
+                            popularString = popular.toString();
+                            if (cols.get(0).text().equals(popularString)) {
+                                //add to new array
+                                skillNames.add(row.text());
                             }
                         }
                     }
@@ -520,58 +511,6 @@ public class MainActivity extends AppCompatActivity {
             expandList.setAdapter(customAdapt);
             talker = null;
             pd.dismiss();
-        }
-
-        /**
-         * Weird case when JSoup doesn't see the first column,
-         * Saw it once in testing so better safe than sorry to include it
-         * Basically col.get(0).text() returns the win percentage, not games played.
-         */
-        public ArrayList<String> colIsString(ArrayList<Float> gamesFloat) {
-            Document doc;
-            try {
-                for (String aHero : hero_names) {
-                    ArrayList<String> skillNames = new ArrayList<>();
-                    ArrayList<String> popularSkills;
-
-                    doc = Jsoup.connect(url + aHero).maxBodySize(0).get();
-
-                    //get the table
-                    Element table = doc.getElementsByTag("table").get(2);
-                    for (Element row : table.select("tr")) {
-                        Elements cols = row.select("td");
-                        if (cols.size() > 10) {
-                            String values = cols.get(0).text().replaceAll("%", "").trim();
-                            gamesFloat.add(Float.valueOf(values));
-                            //get the largest games played value, this is the most popular
-                            Float popular = Collections.max(gamesFloat);
-                            popularString = popular.toString();
-                            if (cols.get(0).text().equals(popularString)) {
-                                //add to new array
-                                skillNames.add(row.text());
-                            }
-                        }
-                    }
-                    for (String eval : skillNames) {
-                        if (eval.contains(popularString)) {
-                            convert = eval;
-                        }
-                    }
-                    //split that long string up and put it into a list
-                    popularSkills = new ArrayList<>(Arrays.asList(convert.split(" ")));
-                    popularSkills.remove(0);  //removing win percent #
-                    popularSkills.remove(0);  //removing % sign
-                    //add our final list to a new list to be passed to MainActivity
-                    passList.add(String.valueOf(popularSkills));
-                }
-                //double check in logcat we got the right skills
-                listener.processFinish(passList);
-                Log.i(TAG, "Popular Skills" + passList);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
         }
     }
 }
