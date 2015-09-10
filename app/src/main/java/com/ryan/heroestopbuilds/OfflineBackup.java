@@ -11,28 +11,6 @@ import java.util.ArrayList;
  */
 public class OfflineBackup {
 
-    String hero_names[] = {"Abathur", "Anub'arak", "Arthas", "Azmodan", "Brightwing", "Chen",
-            "Diablo", "E.T.C.", "Falstad", "Gazlowe", "Illidan", "Jaina",
-            "Johanna", "Kael'thas", "Kerrigan", "Kharazim", "Leoric", "Li Li", "Malfurion", "Muradin",
-            "Murky", "Nazeebo", "Nova", "Raynor", "Rehgar", "Sgt. Hammer",
-            "Sonya", "Stitches", "Sylvanas", "Tassadar", "The Butcher", "The Lost Vikings",
-            "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
-            "Zagara", "Zeratul"};
-
-    int portraits[] = {R.drawable.abathur, R.drawable.anubarak, R.drawable.arthas,
-            R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
-            R.drawable.diablo, R.drawable.elite_tauren_chieftain, R.drawable.falstad,
-            R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
-            R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan, R.drawable.kharazim, R.drawable.leoric,
-            R.drawable.li_li, R.drawable.malfurion, R.drawable.muradin,
-            R.drawable.murky, R.drawable.nazeebo, R.drawable.nova,
-            R.drawable.raynor, R.drawable.rehgar, R.drawable.sergeant_hammer,
-            R.drawable.sonya, R.drawable.stitches, R.drawable.sylvanas,
-            R.drawable.tassadar, R.drawable.the_butcher, R.drawable.the_lost_vikings,
-            R.drawable.thrall, R.drawable.tychus, R.drawable.tyrael, R.drawable.tyrande,
-            R.drawable.uther, R.drawable.valla, R.drawable.zagara,
-            R.drawable.zeratul};
-
     String abathur[]  = {"Pressurized Glands", "Adrenal Overload", "Needlespine", 
             "Evolve Monstrosity", "Soma Transference", "Envenomed Spikes",
             "Hivemind"};
@@ -103,6 +81,8 @@ public class OfflineBackup {
     String rehgar[]   = {"Spiritwalker's Grace", "Feral Heart", "Earth Shield",
             "Ancestral Healing", "Healing Surge", "Tidal Waves",
             "Storm Shield"};
+    String rexxar[] = {"Hunter-Gatherer", "Hungry Bear", "Aspect of the Beast", "Bestial Wrath",
+                        "Wildfire Bear", "Feign Death", "Spirit Bond"};
     String hammer[]   = {"Advanced Artillery", "Maelstrom Shells", "First Aid",
              "Napalm Strike", "Giant Killer", "Hover Siege Mode",
              "Nexus Fury"};
@@ -159,16 +139,16 @@ public class OfflineBackup {
     public  ArrayList<Heroes> offlineTempList() {
         ArrayList<Heroes> list = new ArrayList<>();
         //populate the expandable list with the heroes
-        for (int i = 0; i < hero_names.length; i++) {
+        for (int i = 0; i < Constants.HERO_NAMES.length; i++) {
             Heroes hero = new Heroes();
             //set name and portrait
-            hero.setName(hero_names[i]);
-            hero.setPortrait(portraits[i]);
+            hero.setName(Constants.HERO_NAMES[i]);
+            hero.setPortrait(Constants.PORTRAITS[i]);
             ArrayList<Skills> skillList = new ArrayList<>();
 
             for(int j = 0; j < 7; j++) {
                 Skills skills = new Skills();
-                switch (hero_names[i]) {
+                switch (Constants.HERO_NAMES[i]) {
                     case "Abathur":
                         skills.setName(abathur[j]);
                         skillList.add(skills);
@@ -263,6 +243,10 @@ public class OfflineBackup {
                         break;
                     case "Rehgar":
                         skills.setName(rehgar[j]);
+                        skillList.add(skills);
+                        break;
+                    case "Rexxar":
+                        skills.setName(rexxar[j]);
                         skillList.add(skills);
                         break;
                     case "Raynor":

@@ -43,28 +43,6 @@ import static android.view.Gravity.CENTER;
  */
 public class MainActivity extends AppCompatActivity {
 
-    String hero_names[] = {"Abathur", "Anub'arak", "Arthas", "Azmodan", "Brightwing", "Chen",
-            "Diablo", "E.T.C.", "Falstad", "Gazlowe", "Illidan", "Jaina",
-            "Johanna", "Kael'thas", "Kerrigan", "Kharazim", "Leoric", "Li Li", "Malfurion", "Muradin",
-            "Murky", "Nazeebo", "Nova", "Raynor", "Rehgar", "Sgt. Hammer",
-            "Sonya", "Stitches", "Sylvanas", "Tassadar", "The Butcher", "The Lost Vikings",
-            "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
-            "Zagara", "Zeratul"};
-
-    int portraits[] = {R.drawable.abathur, R.drawable.anubarak, R.drawable.arthas,
-            R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
-            R.drawable.diablo, R.drawable.elite_tauren_chieftain, R.drawable.falstad,
-            R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
-            R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan, R.drawable.kharazim, R.drawable.leoric,
-            R.drawable.li_li, R.drawable.malfurion, R.drawable.muradin,
-            R.drawable.murky, R.drawable.nazeebo, R.drawable.nova,
-            R.drawable.raynor, R.drawable.rehgar, R.drawable.sergeant_hammer,
-            R.drawable.sonya, R.drawable.stitches, R.drawable.sylvanas,
-            R.drawable.tassadar, R.drawable.the_butcher, R.drawable.the_lost_vikings,
-            R.drawable.thrall, R.drawable.tychus, R.drawable.tyrael, R.drawable.tyrande,
-            R.drawable.uther, R.drawable.valla, R.drawable.zagara,
-            R.drawable.zeratul};
-
     PopupWindow popupWindow;
     ExpandableListView expandList;
     ArrayList<String> outList = new ArrayList<>();
@@ -178,11 +156,11 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Heroes> list = new ArrayList<>();
         //populate the expandable list with the heroes
-        for (int i = 0; i < hero_names.length; i++) {
+        for (int i = 0; i < Constants.HERO_NAMES.length; i++) {
             Heroes hero = new Heroes();
             //set name and portrait
-            hero.setName(hero_names[i]);
-            hero.setPortrait(portraits[i]);
+            hero.setName(Constants.HERO_NAMES[i]);
+            hero.setPortrait(Constants.PORTRAITS[i]);
 
             //set child group skills
             //possible refactoring could be done here, but as it stands now,
@@ -191,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             Skills skills = new Skills();
 
             List<String> storedSkills = db.getAllHeroes();
-            if(storedSkills.size() < hero_names.length) {
+            if(storedSkills.size() < Constants.HERO_NAMES.length) {
                 OfflineBackup offline = new OfflineBackup();
                 return offline.offlineTempList();
             }
@@ -204,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 OfflineBackup offline = new OfflineBackup();
                 return offline.offlineTempList();
             } else {
-                switch (hero_names[i]) {
+                switch (Constants.HERO_NAMES[i]) {
                     case "Abathur":
                         skills.setName(storedSkills.get(i));
                         skillList.add(skills);
@@ -298,6 +276,10 @@ public class MainActivity extends AppCompatActivity {
                         skillList.add(skills);
                         break;
                     case "Rehgar":
+                        skills.setName(storedSkills.get(i));
+                        skillList.add(skills);
+                        break;
+                    case "Rexxar":
                         skills.setName(storedSkills.get(i));
                         skillList.add(skills);
                         break;
@@ -408,7 +390,6 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> passList = new ArrayList<>();
         String popularString = null;
         String convert = null;
-        String url = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=";
 
         public JSoupTalker(AsyncResponse listener) {
             this.listener = listener;
@@ -428,12 +409,12 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "InBackground");
             Document doc;
             try {
-                for (String aHero: hero_names) {
+                for (String aHero: Constants.HERO_NAMES) {
                     ArrayList<String> skillNames = new ArrayList<>();
                     ArrayList<Integer> gamesInt = new ArrayList<>();
                     ArrayList<String> popularSkills;
 
-                    doc = Jsoup.connect(url + aHero).maxBodySize(0).get();
+                    doc = Jsoup.connect(Constants.URL + aHero).maxBodySize(0).get();
 
                     //get the table
                     Element table = doc.getElementsByTag("table").get(2);
@@ -477,7 +458,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<String> result) {
             Log.i(TAG, "PostExecute");
 
-            for(int i = 0; i < hero_names.length; i++) {
+            for(int i = 0; i < Constants.HERO_NAMES.length; i++) {
                 if(outList.get(i).length() == 0) {
                     OfflineBackup offline = new OfflineBackup();
                     expandList = (ExpandableListView) findViewById(R.id.expandableList);
@@ -491,13 +472,16 @@ public class MainActivity extends AppCompatActivity {
                         .replace("[", " ")
                         .replace("]", "")
                         .replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2")
-                        .replace("of", " of ")
-                        .replace("for", " for ")
-                        .replace("the", " the ")
+                        .replace("ofthe", " of the")
+                        .replace("of", " of")
+                        .replace("for", " for")
+                        .replace("Isa", "is a")
+                        .replace("of1000Cups", "of 1000 Cups")
                         .replace("Ga the ring", "Gathering")
+                        .replace("Ga the rer", "Gatherer")
                         .replace("Likea", "Like a")
                         .replace("Nor the rn", "Northern")
-                        .replace("Stone for m", "Stoneform")
+                        .replace("Stone form", "Stoneform")
                         .replace("AShark", "A Shark")
                         .replace("Ne the r", "Nether")
                         .replace("Grav OBomb3000", "Grav O Bomb 3000");
