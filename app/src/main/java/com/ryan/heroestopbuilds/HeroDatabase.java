@@ -5,16 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Database to hold information after it's loaded
- * from JSoup.  This is so information can be stored
- * and not have to be fully reloaded every time the
- * user opens up the app.  Perhaps reload once
- * every week or so.  Popular builds from hotslogs won't
- * change on a daily basis, after all.
+ * Database to hold heroes and skills, Table lookup is done by hero name as they are clicked
+ * from the ExpandableList.
  *
  * @author ryan
  */
@@ -25,6 +22,7 @@ public class HeroDatabase extends SQLiteOpenHelper {
     private static final String TABLE_HEROES = "heroes";
 
     private static final String KEY_ID = "id";
+    private static final String KEY_NAME = "name";
     private static final String KEY_SKILLS = "skills";
 
     public HeroDatabase(Context context) {
@@ -34,7 +32,8 @@ public class HeroDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_HEROES + " ( " +
-                        KEY_ID + " INTEGER PRIMARY KEY, " +
+                        KEY_ID + " INTEGER primary key autoincrement, " +
+                        KEY_NAME + " TEXT NOT NULL, " +
                         KEY_SKILLS + " TEXT NOT NULL" + ")"
         );
     }
@@ -45,14 +44,24 @@ public class HeroDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addHero(StoredSkills hero) {
+    public void addHero(String hero, String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(KEY_SKILLS, hero.getSkills());
-
-        db.insert(TABLE_HEROES, null, values);
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_NAME, hero);
+        cv.put(KEY_SKILLS, skills);
+        db.insert(TABLE_HEROES, null, cv);
         db.close();
+    }
+
+    public String getSkills(String id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_HEROES, new String[]{KEY_ID, KEY_NAME, KEY_SKILLS},
+                KEY_NAME + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+        if(cursor != null && cursor.moveToFirst()) {
+            cursor.moveToFirst();
+            return cursor.getString(2);
+        }
+        return null;
     }
 
     public List<String> getAllHeroes() {
@@ -74,4 +83,14 @@ public class HeroDatabase extends SQLiteOpenHelper {
         return heroList;
     }
 
+    public int updateHero(String name, String skills) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_NAME, name);
+        cv.put(KEY_SKILLS, skills);
+
+        return db.update(TABLE_HEROES, cv, KEY_ID + " = ?",
+                new String[] { KEY_NAME });
+    }
 }

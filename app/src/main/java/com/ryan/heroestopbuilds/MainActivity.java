@@ -2,7 +2,6 @@ package com.ryan.heroestopbuilds;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -14,11 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,91 +28,41 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static android.view.Gravity.CENTER;
 
 /**
- * Simple activity that will handle the ExpandableListView
- * after getting the recent skills from AsyncTask, user can
- * refresh when he/she pleases to through the menu option,
- * this will delete the database and create a new one to store
- * new skills
+ * Activity with an ExpandableListView.  The ELV will hold the hero skills and by LongPressing the
+ * user can call to hotslogs.com and get the popular skills.
  *
  * @author ryan
  */
 public class MainActivity extends AppCompatActivity {
 
-    String hero_names[] = {"Abathur", "Anub'arak", "Arthas", "Azmodan", "Brightwing", "Chen",
-            "Diablo", "E.T.C.", "Falstad", "Gazlowe", "Illidan", "Jaina",
-            "Johanna", "Kael'thas", "Kerrigan", "Kharazim", "Leoric", "Li Li", "Malfurion", "Muradin",
-            "Murky", "Nazeebo", "Nova", "Raynor", "Rehgar", "Sgt. Hammer",
-            "Sonya", "Stitches", "Sylvanas", "Tassadar", "The Butcher", "The Lost Vikings",
-            "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
-            "Zagara", "Zeratul"};
-
-    int portraits[] = {R.drawable.abathur, R.drawable.anubarak, R.drawable.arthas,
-            R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
-            R.drawable.diablo, R.drawable.elite_tauren_chieftain, R.drawable.falstad,
-            R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
-            R.drawable.johanna, R.drawable.kaelthas, R.drawable.kerrigan, R.drawable.kharazim, R.drawable.leoric,
-            R.drawable.li_li, R.drawable.malfurion, R.drawable.muradin,
-            R.drawable.murky, R.drawable.nazeebo, R.drawable.nova,
-            R.drawable.raynor, R.drawable.rehgar, R.drawable.sergeant_hammer,
-            R.drawable.sonya, R.drawable.stitches, R.drawable.sylvanas,
-            R.drawable.tassadar, R.drawable.the_butcher, R.drawable.the_lost_vikings,
-            R.drawable.thrall, R.drawable.tychus, R.drawable.tyrael, R.drawable.tyrande,
-            R.drawable.uther, R.drawable.valla, R.drawable.zagara,
-            R.drawable.zeratul};
-
     PopupWindow popupWindow;
     ExpandableListView expandList;
-    ArrayList<String> outList = new ArrayList<>();
+    CustomExpandableAdapter customAdapt;
     HeroDatabase db = new HeroDatabase(this);
     private JSoupTalker talker = null;
     private ProgressDialog pd = null;
     private final String TAG = null;
-    String internetWarning = "No Internet Connection Detected";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        SharedPreferences settings = this.getSharedPreferences("appInfo", 0);
-        boolean firstTime = settings.getBoolean("first_time", true);
-        if (firstTime) {
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putBoolean("first_time", false);
-            editor.apply();
-            if(talker == null && isNetworkAvailable()) {
-                // Get response from web
-                JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
-                    @Override
-                    public void processFinish(ArrayList<String> output) {
-                        outList.addAll(output);
-                    }
-                });
-                talker.execute();
-            } else {
-                OfflineBackup offline = new OfflineBackup();
-                expandList = (ExpandableListView) findViewById(R.id.expandableList);
-                ArrayList<Heroes> offlineList = offline.offlineTempList();
-                CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, offlineList);
-                expandList.setAdapter(customAdapt);
-            }
-        } else {
-            expandList = (ExpandableListView) findViewById(R.id.expandableList);
-            ArrayList<Heroes> initList = setHeroes();
-            CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, initList);
-            expandList.setAdapter(customAdapt);
-        }
+        expandList = (ExpandableListView) findViewById(R.id.expandableList);
+        ArrayList<Heroes> expand = heroList();
+        customAdapt = new CustomExpandableAdapter(MainActivity.this, expand);
+        expandList.setAdapter(customAdapt);
+        setListener();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //make sure to check for active ui stuff that we
-        //need to close
+        //make sure to check for active ui stuff that we need to close
         if(pd != null) {
             pd.dismiss();
         }
@@ -133,25 +82,6 @@ public class MainActivity extends AppCompatActivity {
             popupWindow = showInfoPopup();
             popupWindow.showAtLocation(findViewById(R.id.expandableList), CENTER, 0, 15);
             return true;
-        } if(id == R.id.action_refresh) {
-            if(!isNetworkAvailable()) {
-                Toast toast = Toast.makeText(this,internetWarning, Toast.LENGTH_LONG);
-                toast.show();
-            } else {
-                //delete db and create a new instance of it
-                this.deleteDatabase("heroDatabase");
-                db = new HeroDatabase(this);
-                if (talker == null) {
-                    // Get response from web
-                    JSoupTalker talker = new JSoupTalker(new AsyncResponse() {
-                        @Override
-                        public void processFinish(ArrayList<String> output) {
-                            outList.addAll(output);
-                        }
-                    });
-                    talker.execute();
-                }
-            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -168,209 +98,177 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Make the Expandable List and gather the current
-     * popular build skills from hotslogs to populate the
-     * children views.
+     * Build the ExpandableListView,
+     * Check the database to fill skill list on any heroes that have them.
      *
-     * @return ArrayList for expandableList
+     * @return list for CustomAdapter
      */
-    public ArrayList<Heroes> setHeroes() {
-
+    public ArrayList<Heroes> heroList() {
         ArrayList<Heroes> list = new ArrayList<>();
-        //populate the expandable list with the heroes
-        for (int i = 0; i < hero_names.length; i++) {
+        for (int i = 0; i < Constants.HERO_NAMES.length; i++) {
             Heroes hero = new Heroes();
             //set name and portrait
-            hero.setName(hero_names[i]);
-            hero.setPortrait(portraits[i]);
-
-            //set child group skills
-            //possible refactoring could be done here, but as it stands now,
-            //it's easy to add any new Hero that comes along
+            hero.setName(Constants.HERO_NAMES[i]);
+            hero.setPortrait(Constants.PORTRAITS[i]);
             ArrayList<Skills> skillList = new ArrayList<>();
             Skills skills = new Skills();
-
-            List<String> storedSkills = db.getAllHeroes();
-            if(storedSkills.size() < hero_names.length) {
-                OfflineBackup offline = new OfflineBackup();
-                return offline.offlineTempList();
-            }
-            if(storedSkills.get(0).contains("Unknown Talent")) {
-                Log.e(TAG, "Unknown Talent Found");
-                OfflineBackup offline = new OfflineBackup();
-                return offline.offlineTempList();
-            }
-            if(storedSkills.size() == 0) {
-                OfflineBackup offline = new OfflineBackup();
-                return offline.offlineTempList();
+            if(db.getSkills(Constants.HERO_NAMES[i]) == null) {
+                skills.setName("No skills uploaded");
+                skillList.add(skills);
             } else {
-                switch (hero_names[i]) {
-                    case "Abathur":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Anub'arak":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Arthas":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Azmodan":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Brightwing":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Chen":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Diablo":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "E.T.C.":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Falstad":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Gazlowe":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Illidan":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Jaina":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Johanna":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Kael'thas":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Kerrigan":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Kharazim":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Leoric":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Li Li":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Malfurion":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Muradin":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Murky":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Nazeebo":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Nova":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Rehgar":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Raynor":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Sgt. Hammer":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Sonya":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Stitches":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Sylvanas":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Tassadar":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "The Butcher":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "The Lost Vikings":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Thrall":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Tychus":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Tyrael":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Tyrande":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Uther":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Valla":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Zagara":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                    case "Zeratul":
-                        skills.setName(storedSkills.get(i));
-                        skillList.add(skills);
-                        break;
-                }
-                hero.setSkills(skillList);
-                list.add(hero);
+                skills.setName(db.getSkills(Constants.HERO_NAMES[i]));
+                skillList.add(skills);
             }
+            hero.setSkills(skillList);
+            list.add(hero);
         }
         return list;
+    }
+
+    /**
+     * Set LongClickListener that will tell the app to refresh a given hero's skills
+     */
+    public void setListener() {
+        expandList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (talker == null && isNetworkAvailable()) {
+                    String selection = "";
+                    switch (position) {
+                        case 0:
+                            selection = Constants.HERO_NAMES[0];
+                            break;
+                        case 1:
+                            selection = Constants.HERO_NAMES[1];
+                            break;
+                        case 2:
+                            selection = Constants.HERO_NAMES[2];
+                            break;
+                        case 3:
+                            selection = Constants.HERO_NAMES[3];
+                            break;
+                        case 4:
+                            selection = Constants.HERO_NAMES[4];
+                            break;
+                        case 5:
+                            selection = Constants.HERO_NAMES[5];
+                            break;
+                        case 6:
+                            selection = Constants.HERO_NAMES[6];
+                            break;
+                        case 7:
+                            selection = Constants.HERO_NAMES[7];
+                            break;
+                        case 8:
+                            selection = Constants.HERO_NAMES[8];
+                            break;
+                        case 9:
+                            selection = Constants.HERO_NAMES[9];
+                            break;
+                        case 10:
+                            selection = Constants.HERO_NAMES[10];
+                            break;
+                        case 11:
+                            selection = Constants.HERO_NAMES[11];
+                            break;
+                        case 12:
+                            selection = Constants.HERO_NAMES[12];
+                            break;
+                        case 13:
+                            selection = Constants.HERO_NAMES[13];
+                            break;
+                        case 14:
+                            selection = Constants.HERO_NAMES[14];
+                            break;
+                        case 15:
+                            selection = Constants.HERO_NAMES[15];
+                            break;
+                        case 16:
+                            selection = Constants.HERO_NAMES[16];
+                            break;
+                        case 17:
+                            selection = Constants.HERO_NAMES[17];
+                            break;
+                        case 18:
+                            selection = Constants.HERO_NAMES[18];
+                            break;
+                        case 19:
+                            selection = Constants.HERO_NAMES[19];
+                            break;
+                        case 20:
+                            selection = Constants.HERO_NAMES[20];
+                            break;
+                        case 21:
+                            selection = Constants.HERO_NAMES[21];
+                            break;
+                        case 22:
+                            selection = Constants.HERO_NAMES[22];
+                            break;
+                        case 23:
+                            selection = Constants.HERO_NAMES[23];
+                            break;
+                        case 24:
+                            selection = Constants.HERO_NAMES[24];
+                            break;
+                        case 25:
+                            selection = Constants.HERO_NAMES[25];
+                            break;
+                        case 26:
+                            selection = Constants.HERO_NAMES[26];
+                            break;
+                        case 27:
+                            selection = Constants.HERO_NAMES[27];
+                            break;
+                        case 28:
+                            selection = Constants.HERO_NAMES[28];
+                            break;
+                        case 29:
+                            selection = Constants.HERO_NAMES[29];
+                            break;
+                        case 30:
+                            selection = Constants.HERO_NAMES[30];
+                            break;
+                        case 31:
+                            selection = Constants.HERO_NAMES[31];
+                            break;
+                        case 32:
+                            selection = Constants.HERO_NAMES[32];
+                            break;
+                        case 33:
+                            selection = Constants.HERO_NAMES[33];
+                            break;
+                        case 34:
+                            selection = Constants.HERO_NAMES[34];
+                            break;
+                        case 35:
+                            selection = Constants.HERO_NAMES[35];
+                            break;
+                        case 36:
+                            selection = Constants.HERO_NAMES[36];
+                            break;
+                        case 37:
+                            selection = Constants.HERO_NAMES[37];
+                            break;
+                        case 38:
+                            selection = Constants.HERO_NAMES[38];
+                            break;
+                        case 39:
+                            selection = Constants.HERO_NAMES[39];
+                            break;
+                    }
+                    try {
+                        new JSoupTalker().execute(selection).get();
+                        ArrayList<Heroes> expand = heroList();
+                        customAdapt = new CustomExpandableAdapter(MainActivity.this, expand);
+                        expandList.setAdapter(customAdapt);
+                        customAdapt.notifyDataSetChanged();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return true;
+            }
+        });
     }
 
     /**
@@ -398,21 +296,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * JSoup is used to get website data from hotslogs.com
-     * This info will be thrown to the Database once acquired
-     * to keep it up to date
+     * JSoup is used to get website data from hotslogs.com. This info will be thrown to the
+     * Database once acquired to keep it up to date
      */
-    private class JSoupTalker extends AsyncTask<Void, Void, ArrayList<String>> {
+    private class JSoupTalker extends AsyncTask<String, Void, String> {
 
-        private AsyncResponse listener;
-        ArrayList<String> passList = new ArrayList<>();
         String popularString = null;
         String convert = null;
-        String url = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=";
-
-        public JSoupTalker(AsyncResponse listener) {
-            this.listener = listener;
-        }
 
         @Override
         protected void onPreExecute() {
@@ -424,49 +314,63 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected ArrayList<String> doInBackground(Void...params) {
+        protected String doInBackground(String...params) {
             Log.i(TAG, "InBackground");
             Document doc;
             try {
-                for (String aHero: hero_names) {
-                    ArrayList<String> skillNames = new ArrayList<>();
-                    ArrayList<Integer> gamesInt = new ArrayList<>();
-                    ArrayList<String> popularSkills;
-
-                    doc = Jsoup.connect(url + aHero).maxBodySize(0).get();
-
-                    //get the table
-                    Element table = doc.getElementsByTag("table").get(2);
-                    for (Element row : table.select("tr")) {
-                        Elements cols = row.select("td");
-                        if(cols.size() > 10) {
-                            gamesInt.add(Integer.valueOf(cols.get(0).text()));
-                            Integer popular = Collections.max(gamesInt);
-                            popularString = popular.toString();
-                            if (cols.get(0).text().equals(popularString)) {
-                                //add to new array
-                                skillNames.add(row.text());
-                            }
+                ArrayList<String> skillNames = new ArrayList<>();
+                ArrayList<Integer> gamesInt = new ArrayList<>();
+                ArrayList<String> popularSkills;
+                String passed = params[0];
+                doc = Jsoup.connect(Constants.URL + passed).maxBodySize(0).get();
+                //get the table
+                Element table = doc.getElementsByTag("table").get(2);
+                for (Element row : table.select("tr")) {
+                    Elements cols = row.select("td");
+                    if(cols.size() > 10) {
+                        gamesInt.add(Integer.valueOf(cols.get(0).text()));
+                        Integer popular = Collections.max(gamesInt);
+                        popularString = popular.toString();
+                        if (cols.get(0).text().equals(popularString)) {
+                            //add to new array
+                            skillNames.add(row.text());
                         }
                     }
-                    //if there's a row of skills with the most popular number, snatch it
-                    for (String eval : skillNames) {
-                        if (eval.contains(popularString)) {
-                            convert = eval;
-                        }
-                    }
-                    //split that long string up and put it into a list
-                    popularSkills = new ArrayList<>(Arrays.asList(convert.split(" ")));
-                    popularSkills.remove(0);  //remove games play #
-                    popularSkills.remove(0);  //removing win percent #
-                    popularSkills.remove(0);  //removing % sign
-                    //add our final list to a new list to be passed to MainActivity
-                    passList.add(String.valueOf(popularSkills));
                 }
-                    //double check in logcat we got the right skills
-                    listener.processFinish(passList);
-                    Log.i(TAG, "Popular Skills" + passList);
-
+                //if there's a row of skills with the most popular number, snatch it
+                for (String eval : skillNames) {
+                    if (eval.contains(popularString)) {
+                        convert = eval;
+                    }
+                }
+                //split that long string up and put it into a list
+                popularSkills = new ArrayList<>(Arrays.asList(convert.split(" ")));
+                popularSkills.remove(0);  //remove games play #
+                popularSkills.remove(0);  //removing win percent #
+                popularSkills.remove(0);  //removing % sign
+                //add our final list to a new list to be passed to MainActivity
+                //Pretty print from html with a few annoying edge cases
+                String format = popularSkills.toString()
+                        .replace(",", "\n")
+                        .replace("[", " ")
+                        .replace("]", "")
+                        .replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2")
+                        .replace("ofthe", " of the")
+                        .replace("of", " of")
+                        .replace("for", " for")
+                        .replace("Likea", "Like a")
+                        .replace("AShark", "A Shark")
+                        .replace("Grav OBomb3000", "Grav O Bomb 3000");
+                //double check in logcat we got the right skills
+                Log.i(TAG, "Popular Skills" + format);
+                List<String> storedSkills = db.getAllHeroes();
+                //Update or add new
+                if(storedSkills.contains(params[0])) {
+                    db.updateHero(params[0], format);
+                } else {
+                    db.addHero(params[0], format);
+                }
+                return format;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -474,41 +378,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> result) {
+        protected void onPostExecute(String result) {
             Log.i(TAG, "PostExecute");
-
-            for(int i = 0; i < hero_names.length; i++) {
-                if(outList.get(i).length() == 0) {
-                    OfflineBackup offline = new OfflineBackup();
-                    expandList = (ExpandableListView) findViewById(R.id.expandableList);
-                    ArrayList<Heroes> offlineList = offline.offlineTempList();
-                    CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, offlineList);
-                    expandList.setAdapter(customAdapt);
-                }
-                //Pretty print from html with a few annoying edge cases
-                String format = outList.get(i)
-                        .replace(",", "\n")
-                        .replace("[", " ")
-                        .replace("]", "")
-                        .replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2")
-                        .replace("of", " of ")
-                        .replace("for", " for ")
-                        .replace("the", " the ")
-                        .replace("Ga the ring", "Gathering")
-                        .replace("Likea", "Like a")
-                        .replace("Nor the rn", "Northern")
-                        .replace("Stone for m", "Stoneform")
-                        .replace("AShark", "A Shark")
-                        .replace("Ne the r", "Nether")
-                        .replace("Grav OBomb3000", "Grav O Bomb 3000");
-                db.addHero(new StoredSkills(format));
-            }
-
-            //build the list and set the adapter with our custom one
-            expandList = (ExpandableListView) findViewById(R.id.expandableList);
-            ArrayList<Heroes> heroList = setHeroes();
-            CustomExpandableAdapter customAdapt = new CustomExpandableAdapter(MainActivity.this, heroList);
-            expandList.setAdapter(customAdapt);
             talker = null;
             pd.dismiss();
         }

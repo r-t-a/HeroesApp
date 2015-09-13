@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<Heroes> heroes;
+    private ArrayList<Skills> skillsArrayList;
 
     public CustomExpandableAdapter(Context context, ArrayList<Heroes> heroes) {
         this.context = context;
@@ -29,9 +30,8 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        ArrayList<Skills> skillsArrayList = heroes.get(groupPosition).getSkills();
-        return skillsArrayList.get(childPosition);
-    }
+        skillsArrayList = heroes.get(groupPosition).getSkills();
+        return skillsArrayList.get(childPosition);    }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
@@ -54,16 +54,6 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public int getChildrenCount(int groupPosition) {
-        ArrayList<Skills>skillsArrayList = heroes.get(groupPosition).getSkills();
-        if(skillsArrayList.size() == 0) {
-            return 0;
-        } else {
-            return skillsArrayList.size();
-        }
-    }
-
-    @Override
     public Object getGroup(int groupPosition) {
         return heroes.get(groupPosition);
     }
@@ -71,6 +61,16 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     @Override
     public int getGroupCount() {
         return heroes.size();
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        skillsArrayList = heroes.get(groupPosition).getSkills();
+        if(skillsArrayList.size() == 0) {
+            return 0;
+        } else {
+            return skillsArrayList.size();
+        }
     }
 
     @Override
@@ -109,5 +109,4 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     public void onGroupExpanded(int groupPosition) {
         super.onGroupExpanded(groupPosition);
     }
-
 }

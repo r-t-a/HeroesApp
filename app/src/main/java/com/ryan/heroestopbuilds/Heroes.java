@@ -3,7 +3,7 @@ package com.ryan.heroestopbuilds;
 import java.util.ArrayList;
 
 /**
- * Hero group for the Expandable List
+ * Hero group for the Expandable List and Database
  *
  * @author ryan
  */
@@ -36,5 +36,4 @@ public class Heroes {
     public void setSkills(ArrayList<Skills> skills) {
         this.skills = skills;
     }
-
 }
