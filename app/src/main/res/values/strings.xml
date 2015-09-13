@@ -8,4 +8,5 @@
     <string name="info_text">An app for players that want a quick view of the popular skills to pick for each hero without guide researching.\n\nThe skills for the heroes are based on their popularity from hotslogs.com.</string>
     <string name="update_button">Refresh</string>
     <string name="error_dialog">Looks like I didn\'t get all the skills from the last refresh, let\'s try that again.\n\n Make sure your device is connected to the internet</string>
+    <string name="no_internet">No Internet Connection Detected</string>
 </resources>
