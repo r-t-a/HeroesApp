@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<Skills> skillList = new ArrayList<>();
             Skills skills = new Skills();
             if(db.getSkills(Constants.HERO_NAMES[i]) == null) {
-                skills.setName("No skills uploaded");
+                skills.setName("Press & Hold Hero to Refresh");
                 skillList.add(skills);
             } else {
                 skills.setName(db.getSkills(Constants.HERO_NAMES[i]));
@@ -265,6 +266,8 @@ public class MainActivity extends AppCompatActivity {
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.no_internet, Toast.LENGTH_LONG).show();
                 }
                 return true;
             }
