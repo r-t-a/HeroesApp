@@ -4,7 +4,9 @@
     <string name="action_refresh">Refresh</string>
     <string name="main_title">SELECT A HERO</string>
     <string name="default_text">TextView</string>
-    <string name="button_text">Cool</string>
-    <string name="info_text">An app for players that want a quick view of the popular skills to pick for each hero without guide researching.\n\nThe skills for the heroes are based on their popularity from hotslogs.com.</string>
     <string name="no_internet">No Internet Connection Detected</string>
+    <string name="pref_version">Version</string>
+    <string name="pref_developer">Developer</string>
+    <string name="info_about">Back to Builds</string>
+    <string name="dev">Ryan Anderson</string>
 </resources>

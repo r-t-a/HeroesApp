@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="About">
+        <Preference
+            android:key="VRS"
+            android:title="@string/pref_version">
+        </Preference>
+        <Preference
+            android:key="DEV"
+            android:title="@string/pref_developer">
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

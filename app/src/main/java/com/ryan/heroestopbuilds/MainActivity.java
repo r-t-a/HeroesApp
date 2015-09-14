@@ -2,22 +2,18 @@ package com.ryan.heroestopbuilds;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -31,8 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static android.view.Gravity.CENTER;
-
 /**
  * Activity with an ExpandableListView.  The ELV will hold the hero skills and by LongPressing the
  * user can call to hotslogs.com and get the popular skills.
@@ -41,7 +35,6 @@ import static android.view.Gravity.CENTER;
  */
 public class MainActivity extends AppCompatActivity {
 
-    PopupWindow popupWindow;
     ExpandableListView expandList;
     CustomExpandableAdapter customAdapt;
     HeroDatabase db = new HeroDatabase(this);
@@ -80,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            popupWindow = showInfoPopup();
-            popupWindow.showAtLocation(findViewById(R.id.expandableList), CENTER, 0, 15);
+            Intent intent = new Intent(this,InfoPreferenceActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -272,30 +265,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-    }
-
-    /**
-     * Popup window for general information, accessed through
-     * 3 dot menu
-     *
-     * @return popupWindow
-     */
-    public PopupWindow showInfoPopup() {
-        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.info_popup, new LinearLayout(getBaseContext()), false);
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-
-        Button btnDismiss = (Button)popupView.findViewById(R.id.buttonOk);
-        btnDismiss.setOnClickListener(new Button.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // dismiss dialog window
-                popupWindow.dismiss();
-            }
-        });
-        return popupWindow;
     }
 
     /**
