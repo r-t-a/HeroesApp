@@ -31,7 +31,8 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         skillsArrayList = heroes.get(groupPosition).getSkills();
-        return skillsArrayList.get(childPosition);    }
+        return skillsArrayList.get(childPosition);
+    }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
@@ -108,5 +109,6 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     @Override
     public void onGroupExpanded(int groupPosition) {
         super.onGroupExpanded(groupPosition);
+        System.out.println("SELECTED: " + groupPosition);
     }
 }

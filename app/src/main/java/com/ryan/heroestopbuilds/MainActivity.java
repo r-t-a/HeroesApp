@@ -38,9 +38,11 @@ public class MainActivity extends AppCompatActivity {
     ExpandableListView expandList;
     CustomExpandableAdapter customAdapt;
     HeroDatabase db = new HeroDatabase(this);
+    ArrayList<Heroes> list = new ArrayList<>();
     private JSoupTalker talker = null;
     private ProgressDialog pd = null;
     private final String TAG = null;
+    String selection = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
      * @return list for CustomAdapter
      */
     public ArrayList<Heroes> heroList() {
-        ArrayList<Heroes> list = new ArrayList<>();
+        list = new ArrayList<>();
         for (int i = 0; i < Constants.HERO_NAMES.length; i++) {
             Heroes hero = new Heroes();
             //set name and portrait
@@ -127,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (talker == null && isNetworkAvailable()) {
-                    String selection = "";
                     switch (position) {
                         case 0:
                             selection = Constants.HERO_NAMES[0];
@@ -249,16 +250,14 @@ public class MainActivity extends AppCompatActivity {
                         case 39:
                             selection = Constants.HERO_NAMES[39];
                             break;
+                        case 40:
+                            selection = Constants.HERO_NAMES[40];
+                            break;
+                        default:
+                            selection = null;
+                            break;
                     }
-                    try {
-                        new JSoupTalker().execute(selection).get();
-                        ArrayList<Heroes> expand = heroList();
-                        customAdapt = new CustomExpandableAdapter(MainActivity.this, expand);
-                        expandList.setAdapter(customAdapt);
-                        customAdapt.notifyDataSetChanged();
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
+                    new JSoupTalker().execute(selection);
                 } else {
                     Toast.makeText(MainActivity.this, R.string.no_internet, Toast.LENGTH_LONG).show();
                 }
@@ -332,9 +331,10 @@ public class MainActivity extends AppCompatActivity {
                         .replace("for", " for")
                         .replace("Likea", "Like a")
                         .replace("AShark", "A Shark")
+                        .replace("Isa", "Is a")
                         .replace("Grav OBomb3000", "Grav O Bomb 3000");
                 //double check in logcat we got the right skills
-                Log.i(TAG, "Popular Skills" + format);
+                Log.i(TAG, passed + ":   " +format);
                 List<String> storedSkills = db.getAllHeroes();
                 //Update or add new
                 if(storedSkills.contains(params[0])) {
@@ -352,7 +352,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, "PostExecute");
+            ArrayList<Heroes> expand = heroList();
+            customAdapt = new CustomExpandableAdapter(MainActivity.this, expand);
+            expandList.setAdapter(customAdapt);
+            customAdapt.notifyDataSetChanged();
             talker = null;
+            selection = null;
             pd.dismiss();
         }
     }
