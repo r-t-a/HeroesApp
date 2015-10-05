@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -25,7 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+
+import static com.ryan.heroestopbuilds.CustomExpandableAdapter.*;
 
 /**
  * Activity with an ExpandableListView.  The ELV will hold the hero skills and by LongPressing the
@@ -33,13 +35,13 @@ import java.util.concurrent.ExecutionException;
  *
  * @author ryan
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CallBackInterface {
 
     ExpandableListView expandList;
     CustomExpandableAdapter customAdapt;
     HeroDatabase db = new HeroDatabase(this);
     ArrayList<Heroes> list = new ArrayList<>();
-    private JSoupTalker talker = null;
+    JSoupTalker talker = null;
     private ProgressDialog pd = null;
     private final String TAG = null;
     String selection = null;
@@ -47,12 +49,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.customAdapt = new CustomExpandableAdapter(this);
         setContentView(R.layout.activity_main);
         expandList = (ExpandableListView) findViewById(R.id.expandableList);
         ArrayList<Heroes> expand = heroList();
         customAdapt = new CustomExpandableAdapter(MainActivity.this, expand);
         expandList.setAdapter(customAdapt);
-        setListener();
     }
 
     @Override
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return activeNetwork
      */
-    private boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnected();
@@ -121,159 +123,25 @@ public class MainActivity extends AppCompatActivity {
         return list;
     }
 
-    /**
-     * Set LongClickListener that will tell the app to refresh a given hero's skills
-     */
-    public void setListener() {
-        expandList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (talker == null && isNetworkAvailable()) {
-                    switch (position) {
-                        case 0:
-                            selection = Constants.HERO_NAMES[0];
-                            break;
-                        case 1:
-                            selection = Constants.HERO_NAMES[1];
-                            break;
-                        case 2:
-                            selection = Constants.HERO_NAMES[2];
-                            break;
-                        case 3:
-                            selection = Constants.HERO_NAMES[3];
-                            break;
-                        case 4:
-                            selection = Constants.HERO_NAMES[4];
-                            break;
-                        case 5:
-                            selection = Constants.HERO_NAMES[5];
-                            break;
-                        case 6:
-                            selection = Constants.HERO_NAMES[6];
-                            break;
-                        case 7:
-                            selection = Constants.HERO_NAMES[7];
-                            break;
-                        case 8:
-                            selection = Constants.HERO_NAMES[8];
-                            break;
-                        case 9:
-                            selection = Constants.HERO_NAMES[9];
-                            break;
-                        case 10:
-                            selection = Constants.HERO_NAMES[10];
-                            break;
-                        case 11:
-                            selection = Constants.HERO_NAMES[11];
-                            break;
-                        case 12:
-                            selection = Constants.HERO_NAMES[12];
-                            break;
-                        case 13:
-                            selection = Constants.HERO_NAMES[13];
-                            break;
-                        case 14:
-                            selection = Constants.HERO_NAMES[14];
-                            break;
-                        case 15:
-                            selection = Constants.HERO_NAMES[15];
-                            break;
-                        case 16:
-                            selection = Constants.HERO_NAMES[16];
-                            break;
-                        case 17:
-                            selection = Constants.HERO_NAMES[17];
-                            break;
-                        case 18:
-                            selection = Constants.HERO_NAMES[18];
-                            break;
-                        case 19:
-                            selection = Constants.HERO_NAMES[19];
-                            break;
-                        case 20:
-                            selection = Constants.HERO_NAMES[20];
-                            break;
-                        case 21:
-                            selection = Constants.HERO_NAMES[21];
-                            break;
-                        case 22:
-                            selection = Constants.HERO_NAMES[22];
-                            break;
-                        case 23:
-                            selection = Constants.HERO_NAMES[23];
-                            break;
-                        case 24:
-                            selection = Constants.HERO_NAMES[24];
-                            break;
-                        case 25:
-                            selection = Constants.HERO_NAMES[25];
-                            break;
-                        case 26:
-                            selection = Constants.HERO_NAMES[26];
-                            break;
-                        case 27:
-                            selection = Constants.HERO_NAMES[27];
-                            break;
-                        case 28:
-                            selection = Constants.HERO_NAMES[28];
-                            break;
-                        case 29:
-                            selection = Constants.HERO_NAMES[29];
-                            break;
-                        case 30:
-                            selection = Constants.HERO_NAMES[30];
-                            break;
-                        case 31:
-                            selection = Constants.HERO_NAMES[31];
-                            break;
-                        case 32:
-                            selection = Constants.HERO_NAMES[32];
-                            break;
-                        case 33:
-                            selection = Constants.HERO_NAMES[33];
-                            break;
-                        case 34:
-                            selection = Constants.HERO_NAMES[34];
-                            break;
-                        case 35:
-                            selection = Constants.HERO_NAMES[35];
-                            break;
-                        case 36:
-                            selection = Constants.HERO_NAMES[36];
-                            break;
-                        case 37:
-                            selection = Constants.HERO_NAMES[37];
-                            break;
-                        case 38:
-                            selection = Constants.HERO_NAMES[38];
-                            break;
-                        case 39:
-                            selection = Constants.HERO_NAMES[39];
-                            break;
-                        case 40:
-                            selection = Constants.HERO_NAMES[40];
-                            break;
-                        default:
-                            selection = null;
-                            break;
-                    }
-                    new JSoupTalker().execute(selection);
-                } else {
-                    Toast.makeText(MainActivity.this, R.string.no_internet, Toast.LENGTH_LONG).show();
-                }
-                return true;
-            }
-        });
+    @Override
+    public void onRefreshButton(String s) {
+        if(isNetworkAvailable() && talker == null) {
+            new JSoupTalker().execute(s);
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG)
+                    .show();
+        }
     }
 
     /**
      * JSoup is used to get website data from hotslogs.com. This info will be thrown to the
      * Database once acquired to keep it up to date
      */
-    private class JSoupTalker extends AsyncTask<String, Void, String> {
+    public class JSoupTalker extends AsyncTask<String, Void, String> {
 
         String popularString = null;
         String convert = null;
+        String format = null;
 
         @Override
         protected void onPreExecute() {
@@ -321,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 popularSkills.remove(0);  //removing % sign
                 //add our final list to a new list to be passed to MainActivity
                 //Pretty print from html with a few annoying edge cases
-                String format = popularSkills.toString()
+                format = popularSkills.toString()
                         .replace(",", "\n")
                         .replace("[", " ")
                         .replace("]", "")
@@ -342,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     db.addHero(params[0], format);
                 }
-                return format;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -355,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<Heroes> expand = heroList();
             customAdapt = new CustomExpandableAdapter(MainActivity.this, expand);
             expandList.setAdapter(customAdapt);
-            customAdapt.notifyDataSetChanged();
             talker = null;
             selection = null;
             pd.dismiss();

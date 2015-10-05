@@ -18,4 +18,15 @@
         android:gravity="center_vertical"
         android:text="@string/default_text"
         android:textColor="#4791DA"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/refresh"
+        android:layout_alignTop="@+id/hero_text"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/ic_refresh"
+        android:onClick="onRefreshButton"/>
 </RelativeLayout>

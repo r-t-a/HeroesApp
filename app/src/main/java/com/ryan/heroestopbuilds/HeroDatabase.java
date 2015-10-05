@@ -61,6 +61,9 @@ public class HeroDatabase extends SQLiteOpenHelper {
             cursor.moveToFirst();
             return cursor.getString(2);
         }
+        if (cursor != null) {
+            cursor.close();
+        }
         return null;
     }
 
@@ -79,7 +82,7 @@ public class HeroDatabase extends SQLiteOpenHelper {
                 heroList.add(skills);
             } while (cursor.moveToNext());
         }
-
+        cursor.close();
         return heroList;
     }
 
