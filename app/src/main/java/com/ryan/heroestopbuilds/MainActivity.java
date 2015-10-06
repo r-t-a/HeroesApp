@@ -11,9 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -26,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static com.ryan.heroestopbuilds.CustomExpandableAdapter.*;
 
 /**
  * Activity with an ExpandableListView.  The ELV will hold the hero skills and by LongPressing the
@@ -111,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             ArrayList<Skills> skillList = new ArrayList<>();
             Skills skills = new Skills();
             if(db.getSkills(Constants.HERO_NAMES[i]) == null) {
-                skills.setName("Press & Hold Hero to Refresh");
+                skills.setName("Refresh to get skills");
                 skillList.add(skills);
             } else {
                 skills.setName(db.getSkills(Constants.HERO_NAMES[i]));
@@ -123,6 +118,11 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         return list;
     }
 
+    /**
+     * Wrapper for calling to JSoup execution from Adapter using the interface
+     *
+     * @param s selection of hero to refresh
+     */
     @Override
     public void onRefreshButton(String s) {
         if(isNetworkAvailable() && talker == null) {

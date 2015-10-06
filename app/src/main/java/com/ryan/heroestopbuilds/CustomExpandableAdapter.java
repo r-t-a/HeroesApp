@@ -1,5 +1,6 @@
 package com.ryan.heroestopbuilds;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -24,7 +24,7 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<Heroes> heroes;
     private ArrayList<Skills> skillsArrayList;
-    private CallBackInterface listener;
+    public CallBackInterface listener;
 
     public CustomExpandableAdapter(Context context, ArrayList<Heroes> heroes) {
         this.context = context;
@@ -46,6 +46,8 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
         return childPosition;
     }
 
+    // Suppress is ok in this situation since we rebuild our child view at refresh
+    @SuppressLint("InflateParams")
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                              View convertView, ViewGroup parent) {
@@ -86,6 +88,8 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
         return groupPosition;
     }
 
+    // Ok to suppress this for Lint
+    @SuppressLint("InflateParams")
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
