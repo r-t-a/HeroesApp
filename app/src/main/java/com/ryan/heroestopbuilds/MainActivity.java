@@ -139,9 +139,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
      */
     public class JSoupTalker extends AsyncTask<String, Void, String> {
 
-        String popularString = null;
-        String convert = null;
-        String format = null;
+        String popularString, convert, format = null;
 
         @Override
         protected void onPreExecute() {
