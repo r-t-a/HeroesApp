@@ -233,6 +233,9 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
                     case 40:
                         selection = Constants.HERO_NAMES[40];
                         break;
+                    case 41:
+                        selection = Constants.HERO_NAMES[41];
+                        break;
                     default:
                         selection = null;
                         break;
