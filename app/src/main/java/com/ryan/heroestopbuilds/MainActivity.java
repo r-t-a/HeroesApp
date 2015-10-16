@@ -75,6 +75,12 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             Intent intent = new Intent(this,InfoPreferenceActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_refresh) {
+            if(!isNetworkAvailable()) {
+                Toast toast = Toast.makeText(this, R.string.no_internet, Toast.LENGTH_LONG);
+                toast.show();
+            }
+            onRefreshButton("all");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -134,6 +140,87 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     }
 
     /**
+     * Pretty prints the skills returning from the list
+     *
+     * @param popularSkills takes the list to modify
+     * @return final string for DB
+     */
+    public String prettyPrinter(ArrayList<String> popularSkills) {
+        //add our final list to a new list to be passed to MainActivity
+        return popularSkills.toString()
+                .replace(",", "\n")
+                .replace("[", " ")
+                .replace("]", "")
+                .replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2")
+                .replace("ofthe", " of the")
+                .replace("of", " of")
+                .replace("for", " for")
+                .replace("Likea", "Like a")
+                .replace("AShark", "A Shark")
+                .replace("Isa", "Is a")
+                .replace("Grav OBomb3000", "Grav O Bomb 3000")
+                .replace("1000", " 1000 ")
+                .replace("20", " 20");
+    }
+
+    /**
+     * Check the database for skill updates
+     *
+     * @param passed hero being passed from AsyncTask
+     * @param format throw formatted skill in DB
+     */
+    public void checkDB(String passed, String format) {
+        List<String> storedSkills = db.getAllHeroes();
+        //Update or add new
+        if (storedSkills.contains(passed)) {
+            db.updateHero(passed, format);
+        } else {
+            db.addHero(passed, format);
+        }
+    }
+
+    /**
+     * Get table data from web and get the popular skill list from hotslogs
+     *
+     * @param doc Document from URL
+     * @param popularString the popular skill list from web table
+     * @param convert string of popular string
+     * @return the formatted DB string
+     */
+    public String getTableFromWeb(Document doc, String popularString, String convert) {
+        ArrayList<String> skillNames = new ArrayList<>();
+        ArrayList<Integer> gamesInt = new ArrayList<>();
+        ArrayList<String> popularSkills;
+        //get the table
+        Element table = doc.getElementsByTag("table").get(2);
+        for (Element row : table.select("tr")) {
+            Elements cols = row.select("td");
+            if(cols.size() > 10) {
+                gamesInt.add(Integer.valueOf(cols.get(0).text()));
+                Integer popular = Collections.max(gamesInt);
+                popularString = popular.toString();
+                if (cols.get(0).text().equals(popularString)) {
+                    //add to new array
+                    skillNames.add(row.text());
+                }
+            }
+        }
+        // If there's a row of skills with the most popular number, snatch it
+        for (String eval : skillNames) {
+            if (eval.contains(popularString)) {
+                convert = eval;
+            }
+        }
+        // Split that long string up and put it into a list
+        popularSkills = new ArrayList<>(Arrays.asList(convert.split(" ")));
+        popularSkills.remove(0);  //remove games play #
+        popularSkills.remove(0);  //removing win percent #
+        popularSkills.remove(0);  //removing % sign
+        // Pretty print
+        return prettyPrinter(popularSkills);
+    }
+
+    /**
      * JSoup is used to get website data from hotslogs.com. This info will be thrown to the
      * Database once acquired to keep it up to date
      */
@@ -154,62 +241,30 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         protected String doInBackground(String...params) {
             Log.i(TAG, "InBackground");
             Document doc;
-            try {
-                ArrayList<String> skillNames = new ArrayList<>();
-                ArrayList<Integer> gamesInt = new ArrayList<>();
-                ArrayList<String> popularSkills;
-                String passed = params[0];
-                doc = Jsoup.connect(Constants.URL + passed).maxBodySize(0).get();
-                //get the table
-                Element table = doc.getElementsByTag("table").get(2);
-                for (Element row : table.select("tr")) {
-                    Elements cols = row.select("td");
-                    if(cols.size() > 10) {
-                        gamesInt.add(Integer.valueOf(cols.get(0).text()));
-                        Integer popular = Collections.max(gamesInt);
-                        popularString = popular.toString();
-                        if (cols.get(0).text().equals(popularString)) {
-                            //add to new array
-                            skillNames.add(row.text());
-                        }
+            String passed = params[0];
+
+            if(passed.equals("all")) {
+                try {
+                    for (String aHero: Constants.HERO_NAMES) {
+                        doc = Jsoup.connect(Constants.URL + aHero).maxBodySize(0).get();
+                        format = getTableFromWeb(doc, popularString, convert);
+                        // Double check in logcat we got the right skills
+                        Log.i(TAG, aHero + ":   " + format);
+                        checkDB(aHero,format);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                //if there's a row of skills with the most popular number, snatch it
-                for (String eval : skillNames) {
-                    if (eval.contains(popularString)) {
-                        convert = eval;
-                    }
+            } else {
+                try {
+                    doc = Jsoup.connect(Constants.URL + passed).maxBodySize(0).get();
+                    format = getTableFromWeb(doc, popularString, convert);
+                    // Double check in logcat we got the right skills
+                    Log.i(TAG, passed + ":   " + format);
+                    checkDB(passed, format);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                //split that long string up and put it into a list
-                popularSkills = new ArrayList<>(Arrays.asList(convert.split(" ")));
-                popularSkills.remove(0);  //remove games play #
-                popularSkills.remove(0);  //removing win percent #
-                popularSkills.remove(0);  //removing % sign
-                //add our final list to a new list to be passed to MainActivity
-                //Pretty print from html with a few annoying edge cases
-                format = popularSkills.toString()
-                        .replace(",", "\n")
-                        .replace("[", " ")
-                        .replace("]", "")
-                        .replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2")
-                        .replace("ofthe", " of the")
-                        .replace("of", " of")
-                        .replace("for", " for")
-                        .replace("Likea", "Like a")
-                        .replace("AShark", "A Shark")
-                        .replace("Isa", "Is a")
-                        .replace("Grav OBomb3000", "Grav O Bomb 3000");
-                //double check in logcat we got the right skills
-                Log.i(TAG, passed + ":   " +format);
-                List<String> storedSkills = db.getAllHeroes();
-                //Update or add new
-                if(storedSkills.contains(params[0])) {
-                    db.updateHero(params[0], format);
-                } else {
-                    db.addHero(params[0], format);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
             return null;
         }

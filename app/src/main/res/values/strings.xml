@@ -9,4 +9,5 @@
     <string name="pref_developer">Developer</string>
     <string name="info_about">Back to Builds</string>
     <string name="dev">Ryan Anderson</string>
+    <string name="menu_refresh">Refresh All</string>
 </resources>
