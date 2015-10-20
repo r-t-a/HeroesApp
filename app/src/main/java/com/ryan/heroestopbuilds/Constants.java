@@ -9,7 +9,7 @@ public class Constants {
 
     public static final String URL = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=";
 
-    public static final String HERO_NAMES[] = {"Abathur", "Anub'arak", "Arthas", "Azmodan",
+    public static final String HERO_NAMES[] = {"Abathur", "Anub'arak", "Artanis", "Arthas", "Azmodan",
             "Brightwing", "Chen", "Diablo", "E.T.C.", "Falstad", "Gazlowe", "Illidan", "Jaina",
             "Johanna", "Kael'thas", "Kerrigan", "Kharazim", "Leoric", "Li Li", "Lt. Morales",
             "Malfurion", "Muradin", "Murky", "Nazeebo", "Nova", "Raynor", "Rehgar", "Rexxar",
@@ -17,7 +17,7 @@ public class Constants {
             "The Lost Vikings", "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
             "Zagara", "Zeratul"};
 
-    public static final int PORTRAITS[] = {R.drawable.abathur, R.drawable.anubarak,
+    public static final int PORTRAITS[] = {R.drawable.abathur, R.drawable.anubarak, R.drawable.artanis,
             R.drawable.arthas, R.drawable.azmodan, R.drawable.brightwing, R.drawable.chen,
             R.drawable.diablo, R.drawable.elite_tauren_chieftain, R.drawable.falstad,
             R.drawable.gazlowe, R.drawable.illidan, R.drawable.jaina,
