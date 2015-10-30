@@ -1,0 +1,14 @@
+language: android
+android:
+  components:
+    # Tools
+    - platform-tools
+    - build-tools-22.1.1
+    - android-23
+
+    # Emulators
+    - sys-img-armeabi-v7a-android-19
+    - sys-img-x86-android-17
+
+  script:
+    - ./gradlew clean build
