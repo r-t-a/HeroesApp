@@ -10,7 +10,7 @@ android:
     - extra-android-support
 
     licenses:
-        - android-sdk-license-.+
+    - android-sdk-license-.+
 
     # Emulators
     - sys-img-armeabi-v7a-android-19
