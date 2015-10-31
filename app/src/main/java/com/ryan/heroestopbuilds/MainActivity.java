@@ -242,6 +242,11 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             Log.i(TAG, "InBackground");
             Document doc;
             String passed = params[0];
+            if (passed.equals("Anub'arak")) {
+                passed = "Anub%27arak";
+            } else if(passed.equals("Kael'thas")) {
+                passed = "Kael%27thas";
+            }
 
             if(passed.equals("all")) {
                 try {
