@@ -75,13 +75,13 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             Intent intent = new Intent(this,InfoPreferenceActivity.class);
             startActivity(intent);
             return true;
-        } /*else if (id == R.id.action_refresh) {
+        } else if (id == R.id.action_refresh) {
             if(!isNetworkAvailable()) {
                 Toast toast = Toast.makeText(this, R.string.no_internet, Toast.LENGTH_LONG);
                 toast.show();
             }
             onRefreshButton("all");
-        }*/
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -160,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("Isa", "Is a")
                 .replace("Grav OBomb3000", "Grav O Bomb 3000")
                 .replace("1000", " 1000 ")
+                .replace("Sprayn", "Spray n'")
                 .replace("20", " 20");
     }
 
@@ -242,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             Log.i(TAG, "InBackground");
             Document doc;
             String passed = params[0];
+
             if (passed.equals("Anub'arak")) {
                 passed = "Anub%27arak";
             } else if(passed.equals("Kael'thas")) {
@@ -251,6 +253,11 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             if(passed.equals("all")) {
                 try {
                     for (String aHero: Constants.HERO_NAMES) {
+                        if (aHero.equals("Anub'arak")) {
+                            aHero = "Anub%27arak";
+                        } else if(aHero.equals("Kael'thas")) {
+                            aHero = "Kael%27thas";
+                        }
                         doc = Jsoup.connect(Constants.URL + aHero).maxBodySize(0).get();
                         format = getTableFromWeb(doc, popularString, convert);
                         // Double check in logcat we got the right skills
