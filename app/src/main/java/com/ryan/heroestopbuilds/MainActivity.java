@@ -75,13 +75,13 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             Intent intent = new Intent(this,InfoPreferenceActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.action_refresh) {
+        } /*else if (id == R.id.action_refresh) {
             if(!isNetworkAvailable()) {
                 Toast toast = Toast.makeText(this, R.string.no_internet, Toast.LENGTH_LONG);
                 toast.show();
             }
             onRefreshButton("all");
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
