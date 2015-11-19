@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("Grav OBomb3000", "Grav O Bomb 3000")
                 .replace("1000", " 1000 ")
                 .replace("Sprayn", "Spray n'")
+                .replace("Withthe", "With the")
                 .replace("20", " 20");
     }
 
