@@ -214,9 +214,14 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         }
         // Split that long string up and put it into a list
         popularSkills = new ArrayList<>(Arrays.asList(convert.split(" ")));
-        popularSkills.remove(0);  //remove games play #
-        popularSkills.remove(0);  //removing win percent #
-        popularSkills.remove(0);  //removing % sign
+        if(popularSkills.get(1).matches("\\s")) {
+            popularSkills.remove(0);  //remove games play #
+            popularSkills.remove(0);  //remove whitespace
+        } else {
+            popularSkills.remove(0);  //remove games play #
+            popularSkills.remove(0);  //removing win percent #
+            popularSkills.remove(0);  //removing % sign
+        }
         // Pretty print
         return prettyPrinter(popularSkills);
     }
