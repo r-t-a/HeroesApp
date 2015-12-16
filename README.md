@@ -8,3 +8,6 @@
 # HeroesApp
 Heroes Top Builds App
 
+![alt tag](https://raw.github.com/ScienceRobot/HeroesApp/screens/screen1.png)
+![alt tag](https://raw.github.com/ScienceRobot/HeroesApp/screens/screen2.png)
+
