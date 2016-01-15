@@ -173,6 +173,11 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
      */
     public void checkDB(String passed, String format) {
         List<String> storedSkills = db.getAllHeroes();
+        if (passed.equals("Anub%27arak")) {
+            passed = "Anub'arak";
+        } else if(passed.equals("Kael%27thas")) {
+            passed = "Kael'thas";
+        }
         //Update or add new
         if (storedSkills.contains(passed)) {
             db.updateHero(passed, format);
@@ -249,7 +254,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             Log.i(TAG, "InBackground");
             Document doc;
             String passed = params[0];
-
             if (passed.equals("Anub'arak")) {
                 passed = "Anub%27arak";
             } else if(passed.equals("Kael'thas")) {
