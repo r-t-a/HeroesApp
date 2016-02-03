@@ -162,7 +162,9 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("1000", " 1000 ")
                 .replace("Sprayn", "Spray n'")
                 .replace("Withthe", "With the")
-                .replace("20", " 20");
+                .replace("20", " 20")
+                .replace("G o forthe" , "Go for the")
+                .replace("Onthe", "On the");
     }
 
     /**
@@ -173,13 +175,11 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
      */
     public void checkDB(String passed, String format) {
         List<String> storedSkills = db.getAllHeroes();
-        if (passed.equals("Anub%27arak")) {
-            passed = "Anub'arak";
-        } else if(passed.equals("Kael%27thas")) {
-            passed = "Kael'thas";
-        }
         //Update or add new
         if (storedSkills.contains(passed)) {
+            if(passed.equals("Anub'arak") || passed.equals("Kael'thas")) {
+                return;
+            }
             db.updateHero(passed, format);
         } else {
             db.addHero(passed, format);
@@ -254,20 +254,9 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             Log.i(TAG, "InBackground");
             Document doc;
             String passed = params[0];
-            if (passed.equals("Anub'arak")) {
-                passed = "Anub%27arak";
-            } else if(passed.equals("Kael'thas")) {
-                passed = "Kael%27thas";
-            }
-
             if(passed.equals("all")) {
                 try {
                     for (String aHero: Constants.HERO_NAMES) {
-                        if (aHero.equals("Anub'arak")) {
-                            aHero = "Anub%27arak";
-                        } else if(aHero.equals("Kael'thas")) {
-                            aHero = "Kael%27thas";
-                        }
                         doc = Jsoup.connect(Constants.URL + aHero).maxBodySize(0).get();
                         format = getTableFromWeb(doc, popularString, convert);
                         // Double check in logcat we got the right skills

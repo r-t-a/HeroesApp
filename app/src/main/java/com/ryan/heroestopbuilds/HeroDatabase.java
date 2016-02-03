@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class HeroDatabase extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "heroDatabase";
     private static final String TABLE_HEROES = "heroes";
 
@@ -94,6 +94,7 @@ public class HeroDatabase extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(KEY_SKILLS, skills);
 
+        System.out.println("DB " +name);
         db.update(TABLE_HEROES, cv, "name=" + "'"+name+"'", null);
     }
 }
