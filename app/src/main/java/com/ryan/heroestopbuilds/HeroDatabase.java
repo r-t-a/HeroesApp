@@ -88,13 +88,12 @@ public class HeroDatabase extends SQLiteOpenHelper {
         return heroList;
     }
 
-    public void updateHero(String name, String skills) {
+    public void updateHero(String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
         cv.put(KEY_SKILLS, skills);
 
-        System.out.println("DB " +name);
-        db.update(TABLE_HEROES, cv, "name=" + "'"+name+"'", null);
+        db.update(TABLE_HEROES, cv, KEY_ID + " = ?", new String[] {String.valueOf(skills)});
     }
 }

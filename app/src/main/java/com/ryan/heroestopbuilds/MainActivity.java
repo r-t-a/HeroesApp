@@ -177,9 +177,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         List<String> storedSkills = db.getAllHeroes();
         //Update or add new
         if (storedSkills.contains(passed)) {
-            if(passed.equals("Anub'arak") || passed.equals("Kael'thas")) {
-                return;
-            }
             db.updateHero(passed, format);
         } else {
             db.addHero(passed, format);
