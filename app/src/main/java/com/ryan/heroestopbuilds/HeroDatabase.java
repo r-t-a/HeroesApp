@@ -88,7 +88,7 @@ public class HeroDatabase extends SQLiteOpenHelper {
         return heroList;
     }
 
-    public void updateHero(String skills) {
+    public void updateHero(String name, String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
