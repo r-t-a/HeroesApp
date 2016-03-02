@@ -14,7 +14,7 @@ public class Constants {
             "Johanna", "Kael'thas", "Kerrigan", "Kharazim", "Leoric", "Li Li", "Li-Ming", "Lt. Morales", "Lunara",
             "Malfurion", "Muradin", "Murky", "Nazeebo", "Nova", "Raynor", "Rehgar", "Rexxar",
             "Sgt. Hammer", "Sonya", "Stitches", "Sylvanas", "Tassadar", "The Butcher",
-            "The Lost Vikings", "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla",
+            "The Lost Vikings", "Thrall", "Tychus", "Tyrael", "Tyrande", "Uther", "Valla", "Xul",
             "Zagara", "Zeratul"};
 
     public static final int PORTRAITS[] = {R.drawable.abathur, R.drawable.anubarak, R.drawable.artanis,
@@ -28,6 +28,6 @@ public class Constants {
             R.drawable.sonya, R.drawable.stitches, R.drawable.sylvanas,
             R.drawable.tassadar, R.drawable.the_butcher, R.drawable.the_lost_vikings,
             R.drawable.thrall, R.drawable.tychus, R.drawable.tyrael, R.drawable.tyrande,
-            R.drawable.uther, R.drawable.valla, R.drawable.zagara,
+            R.drawable.uther, R.drawable.valla, R.drawable.xul, R.drawable.zagara,
             R.drawable.zeratul};
 }
