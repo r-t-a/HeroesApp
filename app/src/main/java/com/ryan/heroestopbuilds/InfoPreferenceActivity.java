@@ -1,7 +1,6 @@
 package com.ryan.heroestopbuilds;
 
 import android.app.ActionBar;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
