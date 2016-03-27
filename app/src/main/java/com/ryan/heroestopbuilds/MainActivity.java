@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -32,10 +33,11 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements CallBackInterface {
 
+    public static final String URL = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=";
     ExpandableListView expandList;
     CustomExpandableAdapter customAdapt;
     HeroDatabase db = new HeroDatabase(this);
-    ArrayList<Heroes> list = new ArrayList<>();
+    List<heroSelection> list = new ArrayList<>();
     JSoupTalker talker = null;
     private ProgressDialog pd = null;
     private final String TAG = null;
@@ -47,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         this.customAdapt = new CustomExpandableAdapter(this);
         setContentView(R.layout.activity_main);
         expandList = (ExpandableListView) findViewById(R.id.expandableList);
-        ArrayList<Heroes> expand = heroList();
-        customAdapt = new CustomExpandableAdapter(MainActivity.this, expand);
+        List<heroSelection> heroes = heroList();
+        customAdapt = new CustomExpandableAdapter(MainActivity.this, heroes);
         expandList.setAdapter(customAdapt);
     }
 
@@ -96,31 +98,75 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
+    public enum heroSelection {
+        ABATHUR("Abathur", R.drawable.abathur),
+        ANUBARAK("Anub'arak", R.drawable.anubarak),
+        ARTANIS("Artanis", R.drawable.artanis),
+        ARTHAS("Arthas", R.drawable.arthas),
+        AZMODAN("Azmodan", R.drawable.azmodan),
+        BRIGHTWING("Brightwing", R.drawable.brightwing),
+        CHEN("Chen", R.drawable.chen),
+        CHO("Cho", R.drawable.cho),
+        DIABLO("Diablo", R.drawable.diablo),
+        ETC("E.T.C", R.drawable.elite_tauren_chieftain),
+        FALSTAD("Falstad", R.drawable.falstad),
+        GALL("Gall", R.drawable.gall),
+        GAZLOWE("Gazlowe", R.drawable.gazlowe),
+        GREYMANE("Greymane", R.drawable.greymane),
+        ILLIDAN("Illidan", R.drawable.illidan),
+        JAINA("Jaina", R.drawable.jaina),
+        JOHANNA("Johanna", R.drawable.johanna),
+        KAELTHAS("Kael'thas", R.drawable.kaelthas),
+        KERRIGAN("Kerrigan", R.drawable.kerrigan),
+        KHARAZIM("Kharazim", R.drawable.kharazim),
+        LEORIC("Leoric", R.drawable.leoric),
+        LILI("Li Li", R.drawable.li_li),
+        LIMING("Li-Ming", R.drawable.li_ming),
+        LTMORALES("Lt. Morales", R.drawable.morales),
+        LUNARA("Lunara", R.drawable.lunara),
+        MALFURION("Malfurion", R.drawable.malfurion),
+        MURADIN("Muradin", R.drawable.muradin),
+        MURKY("Murky", R.drawable.murky),
+        NAZEEBO("Nazeebo", R.drawable.nazeebo),
+        NOVA("Nova", R.drawable.nova),
+        RAYNOR("Raynor", R.drawable.raynor),
+        REHGAR("Rehgar", R.drawable.rehgar),
+        REXXAR("Rexxar", R.drawable.rexxar),
+        SGTHAMMER("Sgt. Hammer", R.drawable.sergeant_hammer),
+        SONYA("Sonya", R.drawable.sonya),
+        STITCHES("Stitches", R.drawable.stitches),
+        SYLVANAS("Sylvanas", R.drawable.sylvanas),
+        TASSADAR("Tassadar", R.drawable.tassadar),
+        THEBUTCHER("The Butcher", R.drawable.the_butcher),
+        THELOSTVIKINGS("The Lost Vikings", R.drawable.the_lost_vikings),
+        THRALL("Thrall", R.drawable.thrall),
+        TYCHUS("Tychus", R.drawable.tychus),
+        TYRAEL("Tyrael", R.drawable.tyrael),
+        TYRANDE("Tyrande", R.drawable.tyrande),
+        UTHER("Uther", R.drawable.uther),
+        VALLA("Valla", R.drawable.valla),
+        XUL("Xul", R.drawable.xul),
+        ZAGARA("Zagara", R.drawable.zagara),
+        ZERATUL("Zeratul", R.drawable.zeratul);
+
+        private final String name;
+        private final int portrait;
+        heroSelection(String name, int portrait) {
+            this.name = name;
+            this.portrait = portrait;
+        }
+        public String getName() {return name;}
+        public int getPortrait() {return portrait;}
+    }
+
     /**
      * Build the ExpandableListView,
      * Check the database to fill skill list on any heroes that have them.
      *
      * @return list for CustomAdapter
      */
-    public ArrayList<Heroes> heroList() {
-        list = new ArrayList<>();
-        for (int i = 0; i < Constants.HERO_NAMES.length; i++) {
-            Heroes hero = new Heroes();
-            //set name and portrait
-            hero.setName(Constants.HERO_NAMES[i]);
-            hero.setPortrait(Constants.PORTRAITS[i]);
-            ArrayList<Skills> skillList = new ArrayList<>();
-            Skills skills = new Skills();
-            if(db.getSkills(Constants.HERO_NAMES[i]) == null) {
-                skills.setName("Refresh to get skills");
-                skillList.add(skills);
-            } else {
-                skills.setName(db.getSkills(Constants.HERO_NAMES[i]));
-                skillList.add(skills);
-            }
-            hero.setSkills(skillList);
-            list.add(hero);
-        }
+    public List<heroSelection> heroList() {
+        list = Arrays.asList(heroSelection.values());
         return list;
     }
 
@@ -136,6 +182,16 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         } else {
             Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG)
                     .show();
+        }
+    }
+
+    public String onChildPress(String name) {
+        String skills;
+        skills = db.getSkills(name);
+        if(skills == null) {
+            return "Refresh to get skills";
+        } else {
+            return skills;
         }
     }
 
@@ -253,19 +309,20 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             String passed = params[0];
             if(passed.equals("all")) {
                 try {
-                    for (String aHero: Constants.HERO_NAMES) {
-                        doc = Jsoup.connect(Constants.URL + aHero).maxBodySize(0).get();
+                    for(heroSelection h: heroSelection.values()) {
+                        String names = h.getName();
+                        doc = Jsoup.connect(URL + names).maxBodySize(0).get();
                         format = getTableFromWeb(doc, popularString, convert);
                         // Double check in logcat we got the right skills
-                        Log.i(TAG, aHero + ":   " + format);
-                        checkDB(aHero,format);
+                        Log.i(TAG, names + ":   " + format);
+                        checkDB(names,format);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } else {
                 try {
-                    doc = Jsoup.connect(Constants.URL + passed).maxBodySize(0).get();
+                    doc = Jsoup.connect(URL + passed).maxBodySize(0).get();
                     format = getTableFromWeb(doc, popularString, convert);
                     // Double check in logcat we got the right skills
                     Log.i(TAG, passed + ":   " + format);
@@ -280,9 +337,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, "PostExecute");
-            ArrayList<Heroes> expand = heroList();
-            customAdapt = new CustomExpandableAdapter(MainActivity.this, expand);
-            expandList.setAdapter(customAdapt);
+            customAdapt.notifyDataSetChanged();
             talker = null;
             selection = null;
             pd.dismiss();

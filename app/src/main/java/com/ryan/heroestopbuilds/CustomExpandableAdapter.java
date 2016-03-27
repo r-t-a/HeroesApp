@@ -9,8 +9,9 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.ryan.heroestopbuilds.MainActivity.heroSelection;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Custom Adapter for the Expandable List to be used for all the Heroes
@@ -22,11 +23,10 @@ import java.util.ArrayList;
  */
 public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private ArrayList<Heroes> heroes;
-    private ArrayList<Skills> skillsArrayList;
+    private List<MainActivity.heroSelection> heroes;
     public CallBackInterface listener;
 
-    public CustomExpandableAdapter(Context context, ArrayList<Heroes> heroes) {
+    public CustomExpandableAdapter(Context context, List<heroSelection> heroes) {
         this.context = context;
         this.heroes = heroes;
     }
@@ -37,30 +37,12 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        skillsArrayList = heroes.get(groupPosition).getSkills();
-        return skillsArrayList.get(childPosition);
+        return heroes.get(childPosition);
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
         return childPosition;
-    }
-
-    // Suppress is ok in this situation since we rebuild our child view at refresh
-    @SuppressLint("InflateParams")
-    @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
-                             View convertView, ViewGroup parent) {
-        Skills skills = (Skills) getChild(groupPosition,childPosition);
-        if(convertView == null) {
-            LayoutInflater factory = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = factory.inflate(R.layout.child_list,null);
-        }
-        TextView tv = (TextView)convertView.findViewById(R.id.skill_text);
-        tv.setText(skills.getName());
-
-        return convertView;
     }
 
     @Override
@@ -75,12 +57,7 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        skillsArrayList = heroes.get(groupPosition).getSkills();
-        if(skillsArrayList.size() == 0) {
-            return 0;
-        } else {
-            return skillsArrayList.size();
-        }
+        return 1;
     }
 
     @Override
@@ -93,7 +70,6 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        Heroes heroes = (Heroes) getGroup(groupPosition);
         if(convertView == null) {
             LayoutInflater factory = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -102,8 +78,7 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
         TextView tv = (TextView)convertView.findViewById(R.id.hero_text);
         ImageView iv = (ImageView)convertView.findViewById(R.id.hero_portrait);
         Button refresh = (Button)convertView.findViewById(R.id.refresh);
-        tv.setText(heroes.getName());
-        iv.setImageResource(heroes.getPortrait());
+        final heroSelection i = heroes.get(groupPosition);
         refresh.setFocusable(false);
         refresh.setOnClickListener(new View.OnClickListener() {
             String selection = "";
@@ -113,12 +88,31 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
                 if(selection == null) {
                     return;
                 }
-                selection = Constants.HERO_NAMES[groupPosition];
+                selection = i.getName();
                 if (context instanceof MainActivity) {
                     ((MainActivity)context).onRefreshButton(selection);
                 }
             }
         });
+        tv.setText(i.getName());
+        iv.setImageResource(i.getPortrait());
+        return convertView;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        if(convertView == null) {
+            LayoutInflater factory = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = factory.inflate(R.layout.child_list,null);
+        }
+        TextView tv = (TextView)convertView.findViewById(R.id.skill_text);
+        heroSelection i = heroes.get(groupPosition);
+        String selection = i.getName();
+        if (context instanceof MainActivity) {
+            String skills = ((MainActivity)context).onChildPress(selection);
+            tv.setText(skills);
+        }
         return convertView;
     }
 
