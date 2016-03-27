@@ -297,8 +297,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         protected void onPreExecute() {
             Log.i(TAG, "PreExecute");
             pd = new ProgressDialog(MainActivity.this);
-            pd.setMessage("Gathering Popular Builds");
             pd.setCancelable(false);
+            pd.setMessage("Gathering Popular Builds");
             pd.show();
         }
 
@@ -322,6 +322,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 }
             } else {
                 try {
+                    pd.setMessage("Gathering Popular Builds " + passed);
                     doc = Jsoup.connect(URL + passed).maxBodySize(0).get();
                     format = getTableFromWeb(doc, popularString, convert);
                     // Double check in logcat we got the right skills

@@ -90,11 +90,10 @@ public class HeroDatabase extends SQLiteOpenHelper {
 
     public void updateHero(String name, String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
-        name = name.replace("'", "\'");
         String updateQuery = "UPDATE " + TABLE_HEROES +
                              " SET " + KEY_SKILLS +"="+ "'"+skills+"'" +
-                             " WHERE " + KEY_NAME +"="+ "'"+name+"'";
-        System.out.println("QUERY: " + updateQuery);
-        db.rawQuery(updateQuery,null);
+                             " WHERE " + KEY_NAME +"= ?";
+
+        db.rawQuery(updateQuery,new String[]{name});
     }
 }
