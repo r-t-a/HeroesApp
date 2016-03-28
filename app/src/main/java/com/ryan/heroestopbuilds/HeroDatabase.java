@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class HeroDatabase extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_NAME = "heroDatabase";
     private static final String TABLE_HEROES = "heroes";
 
@@ -90,10 +90,10 @@ public class HeroDatabase extends SQLiteOpenHelper {
 
     public void updateHero(String name, String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
+        String updateQuery = "UPDATE " + TABLE_HEROES +
+                             " SET " + KEY_SKILLS +"="+ "'"+skills+"'" +
+                             " WHERE " + KEY_NAME +"= ?";
 
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_SKILLS, skills);
-
-        db.update(TABLE_HEROES, cv, KEY_ID + " = ?", new String[] {String.valueOf(skills)});
+        db.rawQuery(updateQuery,new String[]{name});
     }
 }
