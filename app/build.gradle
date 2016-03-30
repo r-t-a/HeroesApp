@@ -7,8 +7,8 @@ android {
         applicationId "com.ryan.heroestopbuilds"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 29
-        versionName "7.0"
+        versionCode 30
+        versionName "7.1"
     }
 
     productFlavors {

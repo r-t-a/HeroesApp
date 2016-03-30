@@ -221,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("Withthe", "With the")
                 .replace("20", " 20")
                 .replace("G o forthe" , "Go for the")
+                .replace("Thatsthe", "That's the")
+                .replace("Lambtothe", "Lamb to the")
                 .replace("Onthe", "On the");
     }
 
