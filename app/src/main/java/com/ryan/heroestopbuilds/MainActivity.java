@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         BRIGHTWING("Brightwing", R.drawable.brightwing),
         CHEN("Chen", R.drawable.chen),
         CHO("Cho", R.drawable.cho),
+        DEHAKA("Dehaka", R.drawable.dehaka),
         DIABLO("Diablo", R.drawable.diablo),
         ETC("E.T.C", R.drawable.elite_tauren_chieftain),
         FALSTAD("Falstad", R.drawable.falstad),
@@ -220,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("Withthe", "With the")
                 .replace("20", " 20")
                 .replace("G o forthe" , "Go for the")
+                .replace("Thatsthe", "That's the")
+                .replace("Lambtothe", "Lamb to the")
                 .replace("Onthe", "On the");
     }
 
