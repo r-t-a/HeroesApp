@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -217,11 +216,11 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("Isa", "Is a")
                 .replace("Grav OBomb3000", "Grav O Bomb 3000")
                 .replace("1000", " 1000 ")
-                .replace("Sprayn", "Spray n'")
+                .replace("Sprayn", "Spray n")
                 .replace("Withthe", "With the")
                 .replace("20", " 20")
                 .replace("G o forthe" , "Go for the")
-                .replace("Thatsthe", "That's the")
+                .replace("Thatsthe", "Thats the")
                 .replace("Lambtothe", "Lamb to the")
                 .replace("Onthe", "On the");
     }
