@@ -88,12 +88,19 @@ public class HeroDatabase extends SQLiteOpenHelper {
         return heroList;
     }
 
+    /**
+     * \String updateQuery = "UPDATE " + TABLE_HEROES +
+     " SET " + KEY_SKILLS +"="+ "'"+skills+"'" +
+     " WHERE " + KEY_NAME +"= ?";
+     *
+     * @param name hero being updated
+     * @param skills new skills being updated in db
+     */
     public void updateHero(String name, String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String updateQuery = "UPDATE " + TABLE_HEROES +
-                             " SET " + KEY_SKILLS +"="+ "'"+skills+"'" +
-                             " WHERE " + KEY_NAME +"= ?";
-
-        db.rawQuery(updateQuery,new String[]{name});
+        ContentValues updateData = new ContentValues();
+        updateData.put(KEY_SKILLS, skills);
+        String where=KEY_NAME + "= ?";
+        db.update(TABLE_HEROES,updateData,where,new String[]{name});
     }
 }
