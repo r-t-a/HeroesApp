@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         THEBUTCHER("The Butcher", R.drawable.the_butcher),
         THELOSTVIKINGS("The Lost Vikings", R.drawable.the_lost_vikings),
         THRALL("Thrall", R.drawable.thrall),
+        TRACER("Tracer", R.drawable.tracer),
         TYCHUS("Tychus", R.drawable.tychus),
         TYRAEL("Tyrael", R.drawable.tyrael),
         TYRANDE("Tyrande", R.drawable.tyrande),
@@ -272,6 +273,11 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             }
         }
         if(convert == null) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getApplicationContext(), R.string.no_builds, Toast.LENGTH_SHORT).show();
+                }
+            });
             convert = "Refresh to get skills";
             return convert;
         }
