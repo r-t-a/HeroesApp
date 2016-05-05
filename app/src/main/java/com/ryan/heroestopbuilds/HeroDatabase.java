@@ -53,6 +53,9 @@ public class HeroDatabase extends SQLiteOpenHelper {
             return;
         }
         cv.put(KEY_NAME, hero);
+        if(skills.equals("Refresh to get skills")) {
+            return;
+        }
         cv.put(KEY_SKILLS, skills);
         db.insert(TABLE_HEROES, null, cv);
         db.close();
