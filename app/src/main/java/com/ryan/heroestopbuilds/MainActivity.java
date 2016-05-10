@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Activity with an ExpandableListView.  The ELV will hold the hero skills and by LongPressing the
- * user can call to hotslogs.com and get the popular skills.
+ * Activity with an ExpandableListView.  The ELV will hold the hero skills and by pressing the
+ * refresh button the user can call to hotslogs.com and get the popular skills.
  *
  * @author ryan
  */
@@ -96,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
+    /**
+     * heroes for the expandable list view
+     */
     public enum heroSelection {
         ABATHUR("Abathur", R.drawable.abathur),
         ANUBARAK("Anub'arak", R.drawable.anubarak),
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         THEBUTCHER("The Butcher", R.drawable.the_butcher),
         THELOSTVIKINGS("The Lost Vikings", R.drawable.the_lost_vikings),
         THRALL("Thrall", R.drawable.thrall),
+        TRACER("Tracer", R.drawable.tracer),
         TYCHUS("Tychus", R.drawable.tychus),
         TYRAEL("Tyrael", R.drawable.tyrael),
         TYRANDE("Tyrande", R.drawable.tyrande),
@@ -184,6 +188,12 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         }
     }
 
+    /**
+     * In case there are no popular skills on hotslogs
+     *
+     * @param name hero being passed in
+     * @return nothing if skills not found, else do like normal
+     */
     public String onChildPress(String name) {
         String skills;
         skills = db.getSkills(name);
@@ -202,7 +212,22 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
      */
     public String prettyPrinter(ArrayList<String> popularSkills) {
         //add our final list to a new list to be passed to MainActivity
-        return popularSkills.toString()
+        String level1 =  "Level 1:     " + popularSkills.get(0);
+        String level4 =  "Level 4:     " + popularSkills.get(1);
+        String level7 =  "Level 7:     " + popularSkills.get(2);
+        String level10 = "Level 10:   " + popularSkills.get(3);
+        String level13 = "Level 13:   " + popularSkills.get(4);
+        String level16 = "Level 16:   " + popularSkills.get(5);
+        String level20 = "Level 20:  " + popularSkills.get(6);
+        ArrayList<String> finalList = new ArrayList<>();
+        finalList.add(level1);
+        finalList.add(level4);
+        finalList.add(level7);
+        finalList.add(level10);
+        finalList.add(level13);
+        finalList.add(level16);
+        finalList.add(level20);
+        return finalList.toString()
                 .replace(",", "\n")
                 .replace("[", " ")
                 .replace("]", "")
@@ -272,6 +297,11 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             }
         }
         if(convert == null) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getApplicationContext(), R.string.no_builds, Toast.LENGTH_SHORT).show();
+                }
+            });
             convert = "Refresh to get skills";
             return convert;
         }

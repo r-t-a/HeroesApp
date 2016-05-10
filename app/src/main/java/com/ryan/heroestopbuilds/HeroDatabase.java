@@ -49,7 +49,13 @@ public class HeroDatabase extends SQLiteOpenHelper {
     public void addHero(String hero, String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
+        if(skills.equals("Refresh to get skills")) {
+            return;
+        }
         cv.put(KEY_NAME, hero);
+        if(skills.equals("Refresh to get skills")) {
+            return;
+        }
         cv.put(KEY_SKILLS, skills);
         db.insert(TABLE_HEROES, null, cv);
         db.close();
@@ -99,6 +105,9 @@ public class HeroDatabase extends SQLiteOpenHelper {
     public void updateHero(String name, String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues updateData = new ContentValues();
+        if(skills.equals("Refresh to get skills")) {
+            return;
+        }
         updateData.put(KEY_SKILLS, skills);
         String where=KEY_NAME + "= ?";
         db.update(TABLE_HEROES,updateData,where,new String[]{name});
