@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Activity with an ExpandableListView.  The ELV will hold the hero skills and by LongPressing the
- * user can call to hotslogs.com and get the popular skills.
+ * Activity with an ExpandableListView.  The ELV will hold the hero skills and by pressing the
+ * refresh button the user can call to hotslogs.com and get the popular skills.
  *
  * @author ryan
  */
@@ -96,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
+    /**
+     * heroes for the expandable list view
+     */
     public enum heroSelection {
         ABATHUR("Abathur", R.drawable.abathur),
         ANUBARAK("Anub'arak", R.drawable.anubarak),
@@ -185,6 +188,12 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         }
     }
 
+    /**
+     * In case there are no popular skills on hotslogs
+     *
+     * @param name hero being passed in
+     * @return nothing if skills not found, else do like normal
+     */
     public String onChildPress(String name) {
         String skills;
         skills = db.getSkills(name);
