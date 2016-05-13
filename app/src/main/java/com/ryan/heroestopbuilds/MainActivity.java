@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     JSoupTalker talker = null;
     private ProgressDialog pd = null;
     private final String TAG = null;
+    private static final int levelMod = 5;
     String selection = null;
 
     @Override
@@ -214,9 +215,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         //add our final list to a new list to be passed to MainActivity
         String lgSpacing = String.format("%" + 3 + "s", "");
         String smSpacing = String.format("%" + 1 + "s", "");
-        int count = 5;
         ArrayList<String>finalList = new ArrayList<>();
-        for(int i = 0; i <= count; ++i) {
+        for(int i = 0; i <= levelMod; ++i) {
             if(i <= 2) {
                 finalList.add("Level " + (1 + 3 * i) + ": " + lgSpacing + popularSkills.get(i));
             } else {
@@ -304,13 +304,10 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         }
         // Split that long string up and put it into a list
         popularSkills = new ArrayList<>(Arrays.asList(convert.split(" ")));
-        if(popularSkills.get(1).matches("\\s")) {
-            popularSkills.remove(0);  //remove games play #
-            popularSkills.remove(0);  //remove whitespace
-        } else {
-            popularSkills.remove(0);  //remove games play #
-            popularSkills.remove(0);  //removing win percent #
-            popularSkills.remove(0);  //removing % sign
+        popularSkills.remove(0);  //remove games play #
+        popularSkills.remove(0);  //remove whitespace
+        if(popularSkills.get(0).equals("%")) {
+            popularSkills.remove(0);  // remove % sign if still present
         }
         // Pretty print
         return prettyPrinter(popularSkills);
