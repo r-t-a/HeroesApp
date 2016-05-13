@@ -21,10 +21,10 @@
 
     <Button
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:id="@+id/refresh"
-        android:layout_alignTop="@+id/hero_text"
+        android:layout_alignBaseline="@+id/hero_text"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:background="@drawable/ic_refresh"
