@@ -255,25 +255,18 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         ArrayList<String> finalList = new ArrayList<>();
         String lgSpacing = String.format("%" + 3 + "s", "");
         String smSpacing = String.format("%" + 1 + "s", "");
+        int weGotAChromie = 0;
         //Check first skills, this means we got a Chromie
         if(popularSkills.contains("CompoundingAether") || popularSkills.contains("DeepBreath")
                 || popularSkills.contains("TimewalkersPursuit") || popularSkills.contains("PeerIntoTheFuture")) {
-
-            for (int i = 0; i <= levelMod; i++) {
-                if (i <= 3) {
-                    finalList.add("Level " + (3 * i) + ": " + lgSpacing + popularSkills.get(i));
-                } else {
-                    finalList.add("Level " + (3 * i) + ": " + smSpacing + popularSkills.get(i));
-                }
-            }
-        } else {
-            //add our final list to a new list to be passed to MainActivity
-            for (int i = 0; i <= levelMod; i++) {
-                if (i <= 2) {
-                    finalList.add("Level " + (1 + 3 * i) + ": " + lgSpacing + popularSkills.get(i));
-                } else {
-                    finalList.add("Level " + (1 + 3 * i) + ": " + smSpacing + popularSkills.get(i));
-                }
+            weGotAChromie = 1;
+        }
+        //add our final list to a new list to be passed to MainActivity
+        for (int i = 0; i <= levelMod; i++) {
+            if (i <= 3) {
+                finalList.add("Level " + (weGotAChromie + 3 * i) + ": " + lgSpacing + popularSkills.get(i));
+            } else {
+                finalList.add("Level " + (weGotAChromie + 3 * i) + ": " + smSpacing + popularSkills.get(i));
             }
             finalList.add("Level 20: " + popularSkills.get(6));
         }
