@@ -2,6 +2,7 @@
     <string name="app_name">Heroes Top Builds</string>
     <string name="action_settings">Info</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_search">Search</string>
     <string name="main_title">SELECT A HERO</string>
     <string name="default_text">TextView</string>
     <string name="no_internet">No Internet Connection Detected</string>
@@ -11,4 +12,5 @@
     <string name="dev">Ryan Anderson</string>
     <string name="menu_refresh">Refresh All</string>
     <string name="no_builds">No Builds Found!</string>
+    <string name="search_hint">Hero Name</string>
 </resources>
