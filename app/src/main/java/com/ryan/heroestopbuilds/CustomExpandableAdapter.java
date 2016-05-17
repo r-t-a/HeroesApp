@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.ryan.heroestopbuilds.MainActivity.heroSelection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,12 +24,16 @@ import java.util.List;
  */
 public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private List<MainActivity.heroSelection> heroes;
+    private ArrayList<heroSelection> heroes;
+    private ArrayList<heroSelection> originalList;
     public CallBackInterface listener;
 
     public CustomExpandableAdapter(Context context, List<heroSelection> heroes) {
         this.context = context;
-        this.heroes = heroes;
+        this.heroes = new ArrayList<>();
+        this.heroes.addAll(heroes);
+        this.originalList = new ArrayList<>();
+        this.originalList.addAll(heroes);
     }
 
     public CustomExpandableAdapter(CallBackInterface listener) {
@@ -130,5 +135,25 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     @Override
     public void onGroupExpanded(int groupPosition) {
         super.onGroupExpanded(groupPosition);
+    }
+
+    public void filterData(String query) {
+        query = query.toLowerCase();
+        heroes.clear();
+
+        if(query.isEmpty()) {
+            heroes.addAll(originalList);
+        } else {
+            ArrayList<heroSelection> newList = new ArrayList<>();
+            for(heroSelection hero: originalList) {
+                if(hero.getName().toLowerCase().contains(query)) {
+                    newList.add(hero);
+                }
+                if(newList.size() > 0) {
+                    heroes = newList;
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }

@@ -1,6 +1,7 @@
 package com.ryan.heroestopbuilds;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -8,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +32,8 @@ import java.util.List;
  *
  * @author ryan
  */
-public class MainActivity extends AppCompatActivity implements CallBackInterface {
+public class MainActivity extends AppCompatActivity implements CallBackInterface,
+        SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     ExpandableListView expandList;
     CustomExpandableAdapter customAdapt;
@@ -66,6 +69,13 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        //Enable searching
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        search.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        search.setIconifiedByDefault(false);
+        search.setOnQueryTextListener(this);
+        search.setOnCloseListener(this);
         return true;
     }
 
@@ -84,6 +94,35 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             onRefreshButton("all");
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onClose() {
+        customAdapt.filterData("");
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        customAdapt.filterData(newText);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        customAdapt.filterData(query);
+        expandAll();
+        return false;
+    }
+
+    /**
+     * Expand the ExpandableListView when called
+     */
+    private void expandAll() {
+        int count = customAdapt.getGroupCount();
+        for (int i = 0; i < count; i++) {
+            expandList.expandGroup(i);
+        }
     }
 
     /**
@@ -109,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         BRIGHTWING("Brightwing", R.drawable.brightwing),
         CHEN("Chen", R.drawable.chen),
         CHO("Cho", R.drawable.cho),
+        CHROMIE("Chromie", R.drawable.chromie),
         DEHAKA("Dehaka", R.drawable.dehaka),
         DIABLO("Diablo", R.drawable.diablo),
         ETC("E.T.C", R.drawable.elite_tauren_chieftain),
@@ -212,18 +252,31 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
      * @return final string for DB
      */
     public String prettyPrinter(ArrayList<String> popularSkills) {
-        //add our final list to a new list to be passed to MainActivity
+        ArrayList<String> finalList = new ArrayList<>();
         String lgSpacing = String.format("%" + 3 + "s", "");
         String smSpacing = String.format("%" + 1 + "s", "");
-        ArrayList<String>finalList = new ArrayList<>();
-        for(int i = 0; i <= levelMod; ++i) {
-            if(i <= 2) {
-                finalList.add("Level " + (1 + 3 * i) + ": " + lgSpacing + popularSkills.get(i));
-            } else {
-                finalList.add("Level " + (1 + 3 * i) + ": " + smSpacing + popularSkills.get(i));
+        //Check first skills, this means we got a Chromie
+        if(popularSkills.contains("CompoundingAether") || popularSkills.contains("DeepBreath")
+                || popularSkills.contains("TimewalkersPursuit") || popularSkills.contains("PeerIntoTheFuture")) {
+
+            for (int i = 0; i <= levelMod; i++) {
+                if (i <= 3) {
+                    finalList.add("Level " + (3 * i) + ": " + lgSpacing + popularSkills.get(i));
+                } else {
+                    finalList.add("Level " + (3 * i) + ": " + smSpacing + popularSkills.get(i));
+                }
             }
+        } else {
+            //add our final list to a new list to be passed to MainActivity
+            for (int i = 0; i <= levelMod; i++) {
+                if (i <= 2) {
+                    finalList.add("Level " + (1 + 3 * i) + ": " + lgSpacing + popularSkills.get(i));
+                } else {
+                    finalList.add("Level " + (1 + 3 * i) + ": " + smSpacing + popularSkills.get(i));
+                }
+            }
+            finalList.add("Level 20: " + popularSkills.get(6));
         }
-        finalList.add("Level 20: " + popularSkills.get(6));
         return finalList.toString()
                 .replace(",", "\n")
                 .replace("[", " ")
