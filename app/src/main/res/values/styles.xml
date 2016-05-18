@@ -6,8 +6,8 @@
         <item name="android:actionBarStyle">@style/MyActionBarTheme</item>
     </style>
 
-    <style name="MyActionBarTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">#3366ff</item>
+    <style name="MyActionBarTheme" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:background">@drawable/action_bar</item>
     </style>
 
 </resources>
