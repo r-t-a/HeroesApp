@@ -260,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         for(String s : popularSkills) {
             if (s.matches("(?i)(CompoundingAether|DeepBreath|TimewalkersPursuit|PeerIntoTheFuture)")) {
                 weGotAChromie = 1;
+                break;
             }
         }
         //add our final list to a new list to be passed to MainActivity
