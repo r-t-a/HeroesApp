@@ -255,21 +255,29 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         ArrayList<String> finalList = new ArrayList<>();
         String lgSpacing = String.format("%" + 3 + "s", "");
         String smSpacing = String.format("%" + 1 + "s", "");
-        int weGotAChromie = 0;
+        int weGotAChromie = 1;
         //Check first skills, this means we got a Chromie
         for(String s : popularSkills) {
-            if (s.matches("(?i)(CompoundingAether|DeepBreath|TimewalkersPursuit|PeerIntoTheFuture)")) {
-                weGotAChromie = 1;
+            if (s.matches("(?i)(CompoundingAether|DeepBreathing|TimewalkersPursuit|PeerIntoTheFuture)*")) {
+                weGotAChromie = 0;
+                finalList.add("Level 1:    " + popularSkills.get(0));
+                break;
             }
         }
         //add our final list to a new list to be passed to MainActivity
         for (int i = 0; i <= levelMod; i++) {
-            if (i <= 3) {
+            if (i <= 2) {
                 finalList.add("Level " + (weGotAChromie + 3 * i) + ": " + lgSpacing + popularSkills.get(i));
             } else {
                 finalList.add("Level " + (weGotAChromie + 3 * i) + ": " + smSpacing + popularSkills.get(i));
             }
+        }
+        // formatting for Chromie & others
+        if(weGotAChromie == 1) {
             finalList.add("Level 20: " + popularSkills.get(6));
+        } else {
+            finalList.remove(1);
+            finalList.add("Level 19: " + popularSkills.get(6));
         }
         return finalList.toString()
                 .replace(",", "\n")
@@ -290,6 +298,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("G o forthe" , "Go for the")
                 .replace("Thatsthe", "Thats the")
                 .replace("Lambtothe", "Lamb to the")
+                .replace("Pastand", "Past and")
+                .replace("Reachingthrough", "Reaching Through")
                 .replace("Onthe", "On the");
     }
 
