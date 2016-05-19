@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         String lgSpacing = String.format("%" + 3 + "s", "");
         String smSpacing = String.format("%" + 1 + "s", "");
         //Check first skills, this means we got a Chromie
-        if(popularSkills.contains("CompoundingAether") || popularSkills.contains("DeepBreath")
+        if(popularSkills.contains("CompoundingAether") || popularSkills.contains("DeepBreathing")
                 || popularSkills.contains("TimewalkersPursuit") || popularSkills.contains("PeerIntoTheFuture")) {
 
             finalList.add("Level 1:    " + popularSkills.get(0));
