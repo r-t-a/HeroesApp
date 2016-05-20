@@ -46,6 +46,11 @@ public class HeroDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    /**
+     * Initial adding a hero to the db
+     * @param hero passed in from who got clicked
+     * @param skills store what gets brought back from hotslogs
+     */
     public void addHero(String hero, String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -61,6 +66,12 @@ public class HeroDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Get skills needed to fill child group
+     *
+     * @param id find who's skills we're getting
+     * @return skills for child group in ELV
+     */
     public String getSkills(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_HEROES, new String[]{KEY_ID, KEY_NAME, KEY_SKILLS},
@@ -75,6 +86,10 @@ public class HeroDatabase extends SQLiteOpenHelper {
         return null;
     }
 
+    /**
+     *
+     * @return list of all entries in DB
+     */
     public List<String> getAllHeroes() {
         List<String> heroList = new ArrayList<>();
         // Select All Query
@@ -95,9 +110,10 @@ public class HeroDatabase extends SQLiteOpenHelper {
     }
 
     /**
-     * \String updateQuery = "UPDATE " + TABLE_HEROES +
-     " SET " + KEY_SKILLS +"="+ "'"+skills+"'" +
-     " WHERE " + KEY_NAME +"= ?";
+     * Query:
+     * " UPDATE " + TABLE_HEROES +
+     * " SET " + KEY_SKILLS +"="+ "'"+skills+"'" +
+     * " WHERE " + KEY_NAME +"= ?";
      *
      * @param name hero being updated
      * @param skills new skills being updated in db

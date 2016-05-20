@@ -12,7 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -80,23 +80,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this,InfoPreferenceActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_refresh) {
-            if(!isNetworkAvailable()) {
-                Toast toast = Toast.makeText(this, R.string.no_internet, Toast.LENGTH_LONG);
-                toast.show();
-            }
-            onRefreshButton("all");
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onClose() {
         customAdapt.filterData("");
         return false;
@@ -134,6 +117,24 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnected();
+    }
+
+    public void infoClick(View view) {
+        Intent intent = new Intent(getApplicationContext(),InfoPreferenceActivity.class);
+        startActivity(intent);
+    }
+
+    public void editClick(View view) {
+        Intent intent = new Intent(getApplicationContext(),AddBuildActivity.class);
+        startActivity(intent);
+    }
+
+    public void refreshClick(View view) {
+        if(!isNetworkAvailable()) {
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG);
+            toast.show();
+        }
+        onRefreshButton("all");
     }
 
     /**
@@ -277,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             finalList.add("Level 20: " + popularSkills.get(6));
         } else {
             finalList.remove(1);
-            finalList.add("Level 19: " + popularSkills.get(6));
+            finalList.add("Level 19:  " + popularSkills.get(6));
         }
         return finalList.toString()
                 .replace(",", "\n")
