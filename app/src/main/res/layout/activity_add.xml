@@ -13,92 +13,23 @@
         android:minHeight="20dp"/>
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/level_btns"
-            android:text="1"
-            android:id="@+id/button" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/level_btns"
-            android:text="4"
-            android:id="@+id/button2" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/level_btns"
-            android:text="7"
-            android:id="@+id/button3" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/level_btns"
-            android:text="10"
-            android:id="@+id/button4" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/level_btns"
-            android:text="13"
-            android:id="@+id/button5" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/level_btns"
-            android:text="16"
-            android:id="@+id/button6" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/level_btns"
-            android:text="20"
-            android:id="@+id/button7" />
-
-    </LinearLayout>
-
-    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="347dp"
         android:layout_gravity="center_horizontal">
 
-        <ListView
-            android:layout_width="match_parent"
+        <fragment
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/listView"
-            android:layout_gravity="center_horizontal" />
+            android:name="android.app.ListFragment"
+            android:id="@+id/fragment" />
+
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
 
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/fab"
