@@ -13,8 +13,11 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
+import com.github.clans.fab.FloatingActionMenu;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     private ProgressDialog pd = null;
     private final String TAG = null;
     private static final int levelMod = 5;
+    FloatingActionMenu menu;
     String selection = null;
 
     @Override
@@ -54,6 +58,23 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         List<heroSelection> heroes = heroList();
         customAdapt = new CustomExpandableAdapter(MainActivity.this, heroes);
         expandList.setAdapter(customAdapt);
+        menu = (FloatingActionMenu) findViewById(R.id.fab);
+        expandList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                if (i == 0) {
+                    // At the top
+                    menu.showMenu(true);
+                } else if(i > 0) {
+                    menu.hideMenu(true);
+                }
+            }
+        });
     }
 
     @Override

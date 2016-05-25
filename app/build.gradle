@@ -7,9 +7,9 @@ android {
         applicationId "com.ryan.heroestopbuilds"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 39
+        versionCode 40
         //x.x.x = major.minor.bugs
-        versionName "4.0.0"
+        versionName "3.10.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
