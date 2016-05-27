@@ -7,9 +7,9 @@ android {
         applicationId "com.ryan.heroestopbuilds"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 38
+        versionCode 40
         //x.x.x = major.minor.bugs
-        versionName "3.9.3"
+        versionName "3.10.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -23,6 +23,8 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:design:23.2.1'
+    compile 'com.github.clans:fab:1.6.3'
     compile 'org.jsoup:jsoup:1.8.2'
 
     //Testing libraries

@@ -12,9 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
+import com.github.clans.fab.FloatingActionMenu;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     private ProgressDialog pd = null;
     private final String TAG = null;
     private static final int levelMod = 5;
+    FloatingActionMenu menu;
     String selection = null;
 
     @Override
@@ -54,6 +58,23 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         List<heroSelection> heroes = heroList();
         customAdapt = new CustomExpandableAdapter(MainActivity.this, heroes);
         expandList.setAdapter(customAdapt);
+        menu = (FloatingActionMenu) findViewById(R.id.fab);
+        expandList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                if (i == 0) {
+                    // At the top
+                    menu.showMenu(true);
+                } else if(i > 0) {
+                    menu.hideMenu(true);
+                }
+            }
+        });
     }
 
     @Override
@@ -77,23 +98,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         search.setOnQueryTextListener(this);
         search.setOnCloseListener(this);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this,InfoPreferenceActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_refresh) {
-            if(!isNetworkAvailable()) {
-                Toast toast = Toast.makeText(this, R.string.no_internet, Toast.LENGTH_LONG);
-                toast.show();
-            }
-            onRefreshButton("all");
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -134,6 +138,24 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnected();
+    }
+
+    public void infoClick(View view) {
+        Intent intent = new Intent(getApplicationContext(),InfoPreferenceActivity.class);
+        startActivity(intent);
+    }
+
+    public void editClick(View view) {
+        Intent intent = new Intent(getApplicationContext(),AddBuildActivity.class);
+        startActivity(intent);
+    }
+
+    public void refreshClick(View view) {
+        if(!isNetworkAvailable()) {
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG);
+            toast.show();
+        }
+        onRefreshButton("all");
     }
 
     /**
@@ -277,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             finalList.add("Level 20: " + popularSkills.get(6));
         } else {
             finalList.remove(1);
-            finalList.add("Level 19: " + popularSkills.get(6));
+            finalList.add("Level 19:  " + popularSkills.get(6));
         }
         return finalList.toString()
                 .replace(",", "\n")
@@ -300,6 +322,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("Lambtothe", "Lamb to the")
                 .replace("Pastand", "Past and")
                 .replace("Reachingthrough", "Reaching Through")
+                .replace("Slowing Sands", "  Slowing Sands")
+                .replace("Temporal Loop", "  Temporal Loop")
                 .replace("Onthe", "On the");
     }
 
