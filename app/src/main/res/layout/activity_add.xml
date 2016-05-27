@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1">
 
@@ -12,24 +14,19 @@
         android:layout_gravity="center_horizontal"
         android:minHeight="20dp"/>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="347dp"
-        android:layout_gravity="center_horizontal">
-
-        <fragment
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:name="android.app.ListFragment"
-            android:id="@+id/fragment" />
-
-    </LinearLayout>
-
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
+        tools:context="com.ryan.heroestopbuilds.AddBuildActivity">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/fab"
@@ -54,10 +51,8 @@
                 android:src="@drawable/ic_save"
                 android:onClick="saveBuild"
                 fab:fab_size="mini"
-                fab:fab_label="@string/menu_info" />
+                fab:fab_label="@string/menu_save" />
 
         </com.github.clans.fab.FloatingActionMenu>
-    </RelativeLayout>
-
-
+    </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

@@ -322,6 +322,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("Lambtothe", "Lamb to the")
                 .replace("Pastand", "Past and")
                 .replace("Reachingthrough", "Reaching Through")
+                .replace("Slowing Sands", "  Slowing Sands")
+                .replace("Temporal Loop", "  Temporal Loop")
                 .replace("Onthe", "On the");
     }
 
