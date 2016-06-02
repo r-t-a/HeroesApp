@@ -8,7 +8,5 @@
 # HeroesApp
 Heroes Top Builds App
 
-![alt tag](https://raw.githubusercontent.com/r-t-a/HeroesApp/master/screens/img1.PNG)
-![alt tag](https://raw.githubusercontent.com/r-t-a/HeroesApp/master/screens/img2.PNG)
-![alt tag](https://raw.githubusercontent.com/r-t-a/HeroesApp/master/screens/img3.PNG)
+![alt tag](screens/img1.png)  ![alt tag](screens/img2.png)  ![alt tag](screens/img3.png)
 
