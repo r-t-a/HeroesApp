@@ -8,5 +8,5 @@
 # HeroesApp
 Heroes Top Builds App
 
-![alt tag](screens/img1.png)  ![alt tag](screens/img2.png)  ![alt tag](screens/img3.png)
+![alt tag](screens/img1.PNG)  ![alt tag](screens/img2.PNG)  ![alt tag](screens/img3.PNG)
 
