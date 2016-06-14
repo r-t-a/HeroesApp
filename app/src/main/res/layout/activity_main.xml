@@ -4,7 +4,6 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="16dp"
         android:paddingBottom="16dp">
 
         <ExpandableListView
@@ -39,15 +38,6 @@
                 android:onClick="infoClick"
                 fab:fab_size="mini"
                 fab:fab_label="@string/menu_info" />
-
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/menu_item_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_edit"
-                android:onClick="editClick"
-                fab:fab_size="mini"
-                fab:fab_label="@string/menu_edit" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/menu_item_refresh"

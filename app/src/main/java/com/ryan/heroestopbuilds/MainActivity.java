@@ -145,11 +145,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         startActivity(intent);
     }
 
-    public void editClick(View view) {
-        Intent intent = new Intent(getApplicationContext(),AddBuildActivity.class);
-        startActivity(intent);
-    }
-
     public void refreshClick(View view) {
         if(!isNetworkAvailable()) {
             Toast toast = Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG);
@@ -190,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         LTMORALES("Lt. Morales", R.drawable.morales),
         LUNARA("Lunara", R.drawable.lunara),
         MALFURION("Malfurion", R.drawable.malfurion),
+        MEDIVH("Medivh", R.drawable.medivh),
         MURADIN("Muradin", R.drawable.muradin),
         MURKY("Murky", R.drawable.murky),
         NAZEEBO("Nazeebo", R.drawable.nazeebo),
@@ -424,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                         doc = Jsoup.connect(URL + names).maxBodySize(0).get();
                         format = getTableFromWeb(doc, popularString, convert);
                         // Double check in logcat we got the right skills
-                        Log.i(TAG, names + ":   " + format);
+                        //Log.i(TAG, names + ":   " + format);
                         checkDB(names,format);
                     }
                 } catch (IOException e) {
@@ -436,7 +432,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                     doc = Jsoup.connect(URL + passed).maxBodySize(0).get();
                     format = getTableFromWeb(doc, popularString, convert);
                     // Double check in logcat we got the right skills
-                    Log.i(TAG, passed + ":   " + format);
+                    //Log.i(TAG, passed + ":   " + format);
                     checkDB(passed, format);
                 } catch (IOException e) {
                     e.printStackTrace();
