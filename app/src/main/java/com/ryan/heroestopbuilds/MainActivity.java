@@ -356,17 +356,19 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         for (Element row : table.select("tr")) {
             Elements cols = row.select("td");
             if(cols.size() > 10) {
-                gamesInt.add(Integer.valueOf(cols.get(0).text()));
+                String formatInt = cols.get(0).text().replace(",","");
+                gamesInt.add(Integer.valueOf(formatInt));
                 Integer popular = Collections.max(gamesInt);
                 popularString = popular.toString();
-                if (cols.get(0).text().equals(popularString)) {
+                if (formatInt.equals(popularString)) {
                     //add to new array
                     skillNames.add(row.text());
                 }
             }
         }
         for (String eval : skillNames) {
-            if (eval.contains(popularString)) {
+            String save = eval.replace(",","");
+            if (save.contains(popularString)) {
                 convert = eval;
             }
         }
