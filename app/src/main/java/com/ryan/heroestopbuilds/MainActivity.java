@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
@@ -101,6 +102,19 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_info:
+                Intent intent = new Intent(getApplicationContext(),InfoPreferenceActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public boolean onClose() {
         customAdapt.filterData("");
         return false;
@@ -140,11 +154,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
-    public void infoClick(View view) {
-        Intent intent = new Intent(getApplicationContext(),InfoPreferenceActivity.class);
-        startActivity(intent);
-    }
-
     public void refreshClick(View view) {
         if(!isNetworkAvailable()) {
             Toast toast = Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG);
@@ -173,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         GALL("Gall", R.drawable.gall),
         GAZLOWE("Gazlowe", R.drawable.gazlowe),
         GREYMANE("Greymane", R.drawable.greymane),
+        GULDAN("Gul'dan", R.drawable.guldan),
         ILLIDAN("Illidan", R.drawable.illidan),
         JAINA("Jaina", R.drawable.jaina),
         JOHANNA("Johanna", R.drawable.johanna),

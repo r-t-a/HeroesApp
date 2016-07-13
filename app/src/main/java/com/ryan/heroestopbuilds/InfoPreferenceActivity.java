@@ -25,6 +25,8 @@ public class InfoPreferenceActivity extends AppCompatActivity {
         InfoPreference infoP = new InfoPreference();
         getFragmentManager().beginTransaction().replace(android.R.id.content,
                 infoP).commit();
+
+        setContentView(R.layout.activity_info);
     }
 
     @Override
