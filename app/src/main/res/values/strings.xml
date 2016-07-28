@@ -10,8 +10,11 @@
     <string name="pref_developer">Developer</string>
     <string name="info_about">Back to Builds</string>
     <string name="dev">Ryan Anderson</string>
-    <string name="no_builds">No Current Builds Found!</string>
+    <string name="no_builds">No Popular Builds Found!</string>
     <string name="search_hint">Hero Name</string>
     <string name="section_format">Select a Level %1$d skill</string>
     <string name="menu_save">Save</string>
+    <string name="info_summary">Popular build data is based off of popular builds obtained from
+        hotslogs.com, if no popular builds are found, chances are new data hasn"'"t been posted yet.</string>
+    <string name="logo_info">hotslogs.com logo</string>
 </resources>
