@@ -330,6 +330,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("Reachingthrough", "Reaching Through")
                 .replace("Slowing Sands", "  Slowing Sands")
                 .replace("Temporal Loop", "  Temporal Loop")
+                .replace("Boundby" , "Bound by")
                 .replace("Onthe", "On the");
     }
 
