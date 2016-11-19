@@ -13,13 +13,8 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
-
-import com.github.clans.fab.FloatingActionMenu;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -91,13 +86,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 Intent intent = new Intent(getApplicationContext(),InfoPreferenceActivity.class);
                 startActivity(intent);
                 return true;
-//            case R.id.action_refresh_all:
-//                if(!isNetworkAvailable()) {
-//                    Toast toast = Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG);
-//                    toast.show();
-//                }
-//                onRefreshButton("all");
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -323,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("Temperedby", "Tempered by")
                 .replace("ATouch", "A Touch")
                 .replace("Oneinthe", "One in the")
-                .replace("Counter Strike Lvl 20", "Counter Strike")
+                .replace("Deadly Charge Lvl 20", "Deadly Charge")
                 .replace("Onthe", "On the");
     }
 
