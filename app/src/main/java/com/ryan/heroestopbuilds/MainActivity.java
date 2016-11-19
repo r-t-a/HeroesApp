@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     private ProgressDialog pd = null;
     private final String TAG = null;
     private static final int levelMod = 5;
-    FloatingActionMenu menu;
     String selection = null;
 
     @Override
@@ -59,23 +58,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         List<heroSelection> heroes = heroList();
         customAdapt = new CustomExpandableAdapter(MainActivity.this, heroes);
         expandList.setAdapter(customAdapt);
-        menu = (FloatingActionMenu) findViewById(R.id.fab);
-        expandList.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-                if (i == 0) {
-                    // At the top
-                    menu.showMenu(true);
-                } else if(i > 0) {
-                    menu.hideMenu(true);
-                }
-            }
-        });
     }
 
     @Override
@@ -109,6 +91,13 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 Intent intent = new Intent(getApplicationContext(),InfoPreferenceActivity.class);
                 startActivity(intent);
                 return true;
+//            case R.id.action_refresh_all:
+//                if(!isNetworkAvailable()) {
+//                    Toast toast = Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG);
+//                    toast.show();
+//                }
+//                onRefreshButton("all");
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -154,20 +143,14 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
-    public void refreshClick(View view) {
-        if(!isNetworkAvailable()) {
-            Toast toast = Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG);
-            toast.show();
-        }
-        onRefreshButton("all");
-    }
-
     /**
      * heroes for the expandable list view
      */
     public enum heroSelection {
         ABATHUR("Abathur", R.drawable.abathur),
+        ALARAK("Alarak", R.drawable.alarak),
         ANUBARAK("Anub'arak", R.drawable.anubarak),
+        AURIEL("Auriel", R.drawable.auriel),
         ARTANIS("Artanis", R.drawable.artanis),
         ARTHAS("Arthas", R.drawable.arthas),
         AZMODAN("Azmodan", R.drawable.azmodan),
@@ -203,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         RAYNOR("Raynor", R.drawable.raynor),
         REHGAR("Rehgar", R.drawable.rehgar),
         REXXAR("Rexxar", R.drawable.rexxar),
+        SAMURO("Samuro", R.drawable.samuro),
         SGTHAMMER("Sgt. Hammer", R.drawable.sergeant_hammer),
         SONYA("Sonya", R.drawable.sonya),
         STITCHES("Stitches", R.drawable.stitches),
@@ -217,8 +201,10 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         TYRANDE("Tyrande", R.drawable.tyrande),
         UTHER("Uther", R.drawable.uther),
         VALLA("Valla", R.drawable.valla),
+        VARIAN("Varian", R.drawable.varian),
         XUL("Xul", R.drawable.xul),
         ZAGARA("Zagara", R.drawable.zagara),
+        ZARYA("Zarya", R.drawable.zarya),
         ZERATUL("Zeratul", R.drawable.zeratul);
 
         private final String name;
@@ -302,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         }
         // formatting for Chromie & others
         if(weGotAChromie == 1) {
-            finalList.add("Level 20: " + popularSkills.get(6));
+            finalList.add("Level20:  " + popularSkills.get(6));
         } else {
             finalList.remove(1);
             finalList.add("Level 19:  " + popularSkills.get(6));
@@ -407,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
      * JSoup is used to get website data from hotslogs.com. This info will be thrown to the
      * Database once acquired to keep it up to date
      */
-    public class JSoupTalker extends AsyncTask<String, Void, String> {
+    public class JSoupTalker extends AsyncTask<String, String, String> {
 
         String popularString, convert, format = null;
 
@@ -416,7 +402,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             Log.i(TAG, "PreExecute");
             pd = new ProgressDialog(MainActivity.this);
             pd.setCancelable(false);
-            pd.setMessage("Gathering Popular Builds");
+            pd.setIndeterminate(false);
+            //pd.setMessage("Gathering Popular Builds");
             pd.show();
         }
 
@@ -430,6 +417,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 try {
                     for(heroSelection h: heroSelection.values()) {
                         String names = h.getName();
+                        publishProgress("Gathering Popular Builds " + names);
                         doc = Jsoup.connect(URL + names).maxBodySize(0).get();
                         format = getTableFromWeb(doc, popularString, convert);
                         // Double check in logcat we got the right skills
@@ -452,6 +440,10 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 }
             }
             return null;
+        }
+
+        public void onProgressUpdate(String... args){
+            pd.setMessage(args[0]);
         }
 
         @Override

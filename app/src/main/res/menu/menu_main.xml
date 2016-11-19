@@ -13,4 +13,11 @@
         android:icon="@drawable/ic_info"
         android:title="@string/menu_info"
         app:showAsAction="ifRoom|collapseActionView" />
+
+    <!--<item-->
+        <!--android:id="@+id/action_refresh_all"-->
+        <!--android:icon="@drawable/ic_refresh"-->
+        <!--android:title="@string/menu_refresh"-->
+        <!--app:showAsAction="ifRoom" />-->
+
 </menu>
