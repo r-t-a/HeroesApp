@@ -317,6 +317,13 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 .replace("Slowing Sands", "  Slowing Sands")
                 .replace("Temporal Loop", "  Temporal Loop")
                 .replace("Boundby" , "Bound by")
+                .replace("Way  of", "Way of")
+                .replace("Largeand", "Large and")
+                .replace("Inthe", "In the")
+                .replace("Temperedby", "Tempered by")
+                .replace("ATouch", "A Touch")
+                .replace("Oneinthe", "One in the")
+                .replace("Counter Strike Lvl 20", "Counter Strike")
                 .replace("Onthe", "On the");
     }
 

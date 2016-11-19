@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 3
 def versionMinor = 17
-def versionPatch = 0
+def versionPatch = 1
 
 android {
     compileSdkVersion 24
@@ -27,7 +27,6 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:design:24.1.1'
-    compile 'com.github.clans:fab:1.6.3'
     compile 'org.jsoup:jsoup:1.8.2'
 
     //Testing libraries
