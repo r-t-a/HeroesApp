@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         CHROMIE("Chromie", R.drawable.chromie),
         DEHAKA("Dehaka", R.drawable.dehaka),
         DIABLO("Diablo", R.drawable.diablo),
-        ETC("E.T.C", R.drawable.elite_tauren_chieftain),
+        ETC("E.T.C.", R.drawable.elite_tauren_chieftain),
         FALSTAD("Falstad", R.drawable.falstad),
         GALL("Gall", R.drawable.gall),
         GAZLOWE("Gazlowe", R.drawable.gazlowe),
