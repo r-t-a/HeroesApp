@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InfoPreferenceActivity"
+        <activity android:name=".Preferences.InfoPreferenceActivity"
             android:label="@string/info_about"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait">

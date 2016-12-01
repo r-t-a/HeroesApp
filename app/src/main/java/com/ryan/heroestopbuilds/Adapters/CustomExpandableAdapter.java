@@ -1,4 +1,4 @@
-package com.ryan.heroestopbuilds;
+package com.ryan.heroestopbuilds.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,7 +9,11 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.ryan.heroestopbuilds.MainActivity.heroSelection;
+
+import com.ryan.heroestopbuilds.Interface.CallBackInterface;
+import com.ryan.heroestopbuilds.MainActivity;
+import com.ryan.heroestopbuilds.R;
+import com.ryan.heroestopbuilds.Utilities.HeroSelection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +28,11 @@ import java.util.List;
  */
 public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private ArrayList<heroSelection> heroes;
-    private ArrayList<heroSelection> originalList;
+    private ArrayList<HeroSelection> heroes;
+    private ArrayList<HeroSelection> originalList;
     public CallBackInterface listener;
 
-    public CustomExpandableAdapter(Context context, List<heroSelection> heroes) {
+    public CustomExpandableAdapter(Context context, List<HeroSelection> heroes) {
         this.context = context;
         this.heroes = new ArrayList<>();
         this.heroes.addAll(heroes);
@@ -83,7 +87,7 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
         TextView tv = (TextView)convertView.findViewById(R.id.hero_text);
         ImageView iv = (ImageView)convertView.findViewById(R.id.hero_portrait);
         Button refresh = (Button)convertView.findViewById(R.id.refresh);
-        final heroSelection i = heroes.get(groupPosition);
+        final HeroSelection i = heroes.get(groupPosition);
         refresh.setFocusable(false);
         refresh.setOnClickListener(new View.OnClickListener() {
             String selection = "";
@@ -113,7 +117,7 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
             convertView = factory.inflate(R.layout.child_list,null);
         }
         TextView tv = (TextView)convertView.findViewById(R.id.skill_text);
-        heroSelection i = heroes.get(groupPosition);
+        HeroSelection i = heroes.get(groupPosition);
         String selection = i.getName();
         if (context instanceof MainActivity) {
             String skills = ((MainActivity)context).onChildPress(selection);
@@ -144,8 +148,8 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
         if(query.isEmpty()) {
             heroes.addAll(originalList);
         } else {
-            ArrayList<heroSelection> newList = new ArrayList<>();
-            for(heroSelection hero: originalList) {
+            ArrayList<HeroSelection> newList = new ArrayList<>();
+            for(HeroSelection hero: originalList) {
                 if(hero.getName().toLowerCase().contains(query)) {
                     newList.add(hero);
                 }

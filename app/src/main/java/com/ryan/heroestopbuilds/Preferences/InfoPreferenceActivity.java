@@ -1,4 +1,4 @@
-package com.ryan.heroestopbuilds;
+package com.ryan.heroestopbuilds.Preferences;
 
 import android.app.ActionBar;
 import android.os.Bundle;
@@ -6,6 +6,9 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.ryan.heroestopbuilds.BuildConfig;
+import com.ryan.heroestopbuilds.R;
 
 /**
  * Info page

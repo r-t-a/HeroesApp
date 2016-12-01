@@ -3,6 +3,8 @@ package com.ryan.heroestopbuilds;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 
+import com.ryan.heroestopbuilds.Database.HeroDatabase;
+
 /**
  * @author ryan
  */

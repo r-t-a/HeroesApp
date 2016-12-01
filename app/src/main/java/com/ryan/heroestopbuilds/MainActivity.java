@@ -15,6 +15,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
+import com.ryan.heroestopbuilds.Adapters.CustomExpandableAdapter;
+import com.ryan.heroestopbuilds.Database.HeroDatabase;
+import com.ryan.heroestopbuilds.Interface.CallBackInterface;
+import com.ryan.heroestopbuilds.Preferences.InfoPreferenceActivity;
+import com.ryan.heroestopbuilds.Utilities.HeroSelection;
+import com.ryan.heroestopbuilds.Utilities.TalentFormatter;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -37,11 +45,10 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     ExpandableListView expandList;
     CustomExpandableAdapter customAdapt;
     HeroDatabase db = new HeroDatabase(this);
-    List<heroSelection> list = new ArrayList<>();
+    List<HeroSelection> list = new ArrayList<>();
     JSoupTalker talker = null;
     private ProgressDialog pd = null;
     private final String TAG = null;
-    private static final int levelMod = 5;
     String selection = null;
 
     @Override
@@ -50,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         this.customAdapt = new CustomExpandableAdapter(this);
         setContentView(R.layout.activity_main);
         expandList = (ExpandableListView) findViewById(R.id.expandableList);
-        List<heroSelection> heroes = heroList();
+        List<HeroSelection> heroes = heroList();
         customAdapt = new CustomExpandableAdapter(MainActivity.this, heroes);
         expandList.setAdapter(customAdapt);
     }
@@ -131,79 +138,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
-    /**
-     * heroes for the expandable list view
-     */
-    public enum heroSelection {
-        ABATHUR("Abathur", R.drawable.abathur),
-        ALARAK("Alarak", R.drawable.alarak),
-        ANUBARAK("Anub'arak", R.drawable.anubarak),
-        AURIEL("Auriel", R.drawable.auriel),
-        ARTANIS("Artanis", R.drawable.artanis),
-        ARTHAS("Arthas", R.drawable.arthas),
-        AZMODAN("Azmodan", R.drawable.azmodan),
-        BRIGHTWING("Brightwing", R.drawable.brightwing),
-        CHEN("Chen", R.drawable.chen),
-        CHO("Cho", R.drawable.cho),
-        CHROMIE("Chromie", R.drawable.chromie),
-        DEHAKA("Dehaka", R.drawable.dehaka),
-        DIABLO("Diablo", R.drawable.diablo),
-        ETC("E.T.C.", R.drawable.elite_tauren_chieftain),
-        FALSTAD("Falstad", R.drawable.falstad),
-        GALL("Gall", R.drawable.gall),
-        GAZLOWE("Gazlowe", R.drawable.gazlowe),
-        GREYMANE("Greymane", R.drawable.greymane),
-        GULDAN("Gul'dan", R.drawable.guldan),
-        ILLIDAN("Illidan", R.drawable.illidan),
-        JAINA("Jaina", R.drawable.jaina),
-        JOHANNA("Johanna", R.drawable.johanna),
-        KAELTHAS("Kael'thas", R.drawable.kaelthas),
-        KERRIGAN("Kerrigan", R.drawable.kerrigan),
-        KHARAZIM("Kharazim", R.drawable.kharazim),
-        LEORIC("Leoric", R.drawable.leoric),
-        LILI("Li Li", R.drawable.li_li),
-        LIMING("Li-Ming", R.drawable.li_ming),
-        LTMORALES("Lt. Morales", R.drawable.morales),
-        LUNARA("Lunara", R.drawable.lunara),
-        MALFURION("Malfurion", R.drawable.malfurion),
-        MEDIVH("Medivh", R.drawable.medivh),
-        MURADIN("Muradin", R.drawable.muradin),
-        MURKY("Murky", R.drawable.murky),
-        NAZEEBO("Nazeebo", R.drawable.nazeebo),
-        NOVA("Nova", R.drawable.nova),
-        RAYNOR("Raynor", R.drawable.raynor),
-        REHGAR("Rehgar", R.drawable.rehgar),
-        REXXAR("Rexxar", R.drawable.rexxar),
-        SAMURO("Samuro", R.drawable.samuro),
-        SGTHAMMER("Sgt. Hammer", R.drawable.sergeant_hammer),
-        SONYA("Sonya", R.drawable.sonya),
-        STITCHES("Stitches", R.drawable.stitches),
-        SYLVANAS("Sylvanas", R.drawable.sylvanas),
-        TASSADAR("Tassadar", R.drawable.tassadar),
-        THEBUTCHER("The Butcher", R.drawable.the_butcher),
-        THELOSTVIKINGS("The Lost Vikings", R.drawable.the_lost_vikings),
-        THRALL("Thrall", R.drawable.thrall),
-        TRACER("Tracer", R.drawable.tracer),
-        TYCHUS("Tychus", R.drawable.tychus),
-        TYRAEL("Tyrael", R.drawable.tyrael),
-        TYRANDE("Tyrande", R.drawable.tyrande),
-        UTHER("Uther", R.drawable.uther),
-        VALLA("Valla", R.drawable.valla),
-        VARIAN("Varian", R.drawable.varian),
-        XUL("Xul", R.drawable.xul),
-        ZAGARA("Zagara", R.drawable.zagara),
-        ZARYA("Zarya", R.drawable.zarya),
-        ZERATUL("Zeratul", R.drawable.zeratul);
 
-        private final String name;
-        private final int portrait;
-        heroSelection(String name, int portrait) {
-            this.name = name;
-            this.portrait = portrait;
-        }
-        public String getName() {return name;}
-        public int getPortrait() {return portrait;}
-    }
 
     /**
      * Build the ExpandableListView,
@@ -211,8 +146,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
      *
      * @return list for CustomAdapter
      */
-    public List<heroSelection> heroList() {
-        list = Arrays.asList(heroSelection.values());
+    public List<HeroSelection> heroList() {
+        list = Arrays.asList(HeroSelection.values());
         return list;
     }
 
@@ -245,74 +180,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         } else {
             return skills;
         }
-    }
-
-    /**
-     * Pretty prints the skills returning from the list
-     *
-     * @param popularSkills takes the list to modify
-     * @return final string for DB
-     */
-    public String prettyPrinter(ArrayList<String> popularSkills) {
-        ArrayList<String> finalList = new ArrayList<>();
-        String lgSpacing = String.format("%" + 3 + "s", "");
-        String smSpacing = String.format("%" + 1 + "s", "");
-        int weGotAChromie = 1;
-        //Check first skills, this means we got a Chromie
-        for(String s : popularSkills) {
-            if (s.matches("(?i)(CompoundingAether|DeepBreathing|TimewalkersPursuit|PeerIntoTheFuture)*")) {
-                weGotAChromie = 0;
-                finalList.add("Level 1:    " + popularSkills.get(0));
-                break;
-            }
-        }
-        //add our final list to a new list to be passed to MainActivity
-        for (int i = 0; i <= levelMod; i++) {
-            if (i <= 2) {
-                finalList.add("Level " + (weGotAChromie + 3 * i) + ": " + lgSpacing + popularSkills.get(i));
-            } else {
-                finalList.add("Level " + (weGotAChromie + 3 * i) + ": " + smSpacing + popularSkills.get(i));
-            }
-        }
-        // formatting for Chromie & others
-        if(weGotAChromie == 1) {
-            finalList.add("Level20:  " + popularSkills.get(6));
-        } else {
-            finalList.remove(1);
-            finalList.add("Level 19:  " + popularSkills.get(6));
-        }
-        return finalList.toString()
-                .replace(",", "\n")
-                .replace("[", " ")
-                .replace("]", "")
-                .replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2")
-                .replace("ofthe", " of the")
-                .replace("of", " of")
-                .replace("for", " for")
-                .replace("Likea", "Like a")
-                .replace("AShark", "A Shark")
-                .replace("Isa", "Is a")
-                .replace("Grav OBomb3000", "Grav O Bomb 3000")
-                .replace("1000", " 1000 ")
-                .replace("Sprayn", "Spray n")
-                .replace("Withthe", "With the")
-                .replace("20", " 20")
-                .replace("G o forthe" , "Go for the")
-                .replace("Thatsthe", "Thats the")
-                .replace("Lambtothe", "Lamb to the")
-                .replace("Pastand", "Past and")
-                .replace("Reachingthrough", "Reaching Through")
-                .replace("Slowing Sands", "  Slowing Sands")
-                .replace("Temporal Loop", "  Temporal Loop")
-                .replace("Boundby" , "Bound by")
-                .replace("Way  of", "Way of")
-                .replace("Largeand", "Large and")
-                .replace("Inthe", "In the")
-                .replace("Temperedby", "Tempered by")
-                .replace("ATouch", "A Touch")
-                .replace("Oneinthe", "One in the")
-                .replace("Deadly Charge Lvl 20", "Deadly Charge")
-                .replace("Onthe", "On the");
     }
 
     /**
@@ -381,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             popularSkills.remove(0);  // remove % sign if still present
         }
         // Pretty print
-        return prettyPrinter(popularSkills);
+        return TalentFormatter.prettyPrinter(popularSkills);
     }
 
     /**
@@ -410,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             String passed = params[0];
             if(passed.equals("all")) {
                 try {
-                    for(heroSelection h: heroSelection.values()) {
+                    for(HeroSelection h: HeroSelection.values()) {
                         String names = h.getName();
                         publishProgress("Gathering Popular Builds " + names);
                         doc = Jsoup.connect(URL + names).maxBodySize(0).get();
