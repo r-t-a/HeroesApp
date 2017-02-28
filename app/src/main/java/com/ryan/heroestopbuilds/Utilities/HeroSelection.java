@@ -39,6 +39,7 @@ public enum HeroSelection {
         LILI("Li Li", R.drawable.li_li),
         LIMING("Li-Ming", R.drawable.li_ming),
         LTMORALES("Lt. Morales", R.drawable.morales),
+        LUCIO("Lucio", R.drawable.lucio),
         LUNARA("Lunara", R.drawable.lunara),
         MALFURION("Malfurion", R.drawable.malfurion),
         MEDIVH("Medivh", R.drawable.medivh),
@@ -46,6 +47,7 @@ public enum HeroSelection {
         MURKY("Murky", R.drawable.murky),
         NAZEEBO("Nazeebo", R.drawable.nazeebo),
         NOVA("Nova", R.drawable.nova),
+        RAGNAROS("Ragnaros", R.drawable.ragnaros),
         RAYNOR("Raynor", R.drawable.raynor),
         REHGAR("Rehgar", R.drawable.rehgar),
         REXXAR("Rexxar", R.drawable.rexxar),
@@ -63,12 +65,14 @@ public enum HeroSelection {
         TYRAEL("Tyrael", R.drawable.tyrael),
         TYRANDE("Tyrande", R.drawable.tyrande),
         UTHER("Uther", R.drawable.uther),
+        VALEERA("Valeera", R.drawable.valeera),
         VALLA("Valla", R.drawable.valla),
         VARIAN("Varian", R.drawable.varian),
         XUL("Xul", R.drawable.xul),
         ZAGARA("Zagara", R.drawable.zagara),
         ZARYA("Zarya", R.drawable.zarya),
-        ZERATUL("Zeratul", R.drawable.zeratul);
+        ZERATUL("Zeratul", R.drawable.zeratul),
+        ZULJIN("Zul'jin", R.drawable.zuljin);
 
         private final String name;
         private final int portrait;

@@ -77,6 +77,11 @@ public class TalentFormatter {
                 .replace("Deadly Charge Lvl 20", "Deadly Charge")
                 .replace("Eyesinthe", "Eyes in the")
                 .replace("Pressthe", "Press the")
-                .replace("Onthe", "On the");
+                .replace("Onthe", "On the")
+                .replace("Letthe", "Let the")
+                .replace("Player Choice", "Players Choice")
+                .replace("Seekerinthe", "Seeker in the")
+                .replace("Sliceand", "Slice and")
+                .replace("Fromthe", "From the");
     }
 }
