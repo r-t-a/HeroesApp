@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         List<HeroSelection> heroes = heroList();
         customAdapt = new CustomExpandableAdapter(MainActivity.this, heroes);
         expandList.setAdapter(customAdapt);
+        expandList.setFastScrollEnabled(true);
     }
 
     @Override
