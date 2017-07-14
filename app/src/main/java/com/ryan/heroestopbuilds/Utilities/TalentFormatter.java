@@ -2,20 +2,11 @@ package com.ryan.heroestopbuilds.Utilities;
 
 import java.util.ArrayList;
 
-/**
- * Pretty prints the skills returning from the list
- *
- * Created by Ryan on 11/30/2016.
- */
-
 public class TalentFormatter {
 
     private static final int levelMod = 5;
 
-    /**
-     * @param popularSkills takes the list to modify
-     * @return final string for DB
-     */
+
     public static String prettyPrinter(ArrayList<String> popularSkills) {
         ArrayList<String> finalList = new ArrayList<>();
         String lgSpacing = String.format("%" + 3 + "s", "");
@@ -52,6 +43,7 @@ public class TalentFormatter {
                 .replace("ofthe", " of the")
                 .replace("of", " of")
                 .replace("for", " for")
+                .replace("asthe", " as the")
                 .replace("Likea", "Like a")
                 .replace("AShark", "A Shark")
                 .replace("Isa", "Is a")
@@ -82,6 +74,12 @@ public class TalentFormatter {
                 .replace("Player Choice", "Players Choice")
                 .replace("Seekerinthe", "Seeker in the")
                 .replace("Sliceand", "Slice and")
+                .replace("Chasethe", "Chase the")
+                .replace("inthe"," in the")
+                .replace("AFishy", "A Fishy")
+                .replace("Fearthe", "Fear the")
+                .replace("Hitthe", "Hit the")
+                .replace("XStrike", "X-Strike")
                 .replace("Fromthe", "From the");
     }
 }

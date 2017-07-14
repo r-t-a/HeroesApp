@@ -33,12 +33,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Activity with an ExpandableListView.  The ELV will hold the hero skills and by pressing the
- * refresh button the user can call to hotslogs.com and get the popular skills.
- *
- * @author ryan
- */
 public class MainActivity extends AppCompatActivity implements CallBackInterface,
         SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
@@ -128,35 +122,18 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         }
     }
 
-    /**
-     * Make sure the device is connected when refreshing/initial populating
-     *
-     * @return activeNetwork
-     */
+
     public boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
-
-
-    /**
-     * Build the ExpandableListView,
-     * Check the database to fill skill list on any heroes that have them.
-     *
-     * @return list for CustomAdapter
-     */
     public List<HeroSelection> heroList() {
         list = Arrays.asList(HeroSelection.values());
         return list;
     }
 
-    /**
-     * Wrapper for calling to JSoup execution from Adapter using the interface
-     *
-     * @param s selection of hero to refresh
-     */
     @Override
     public void onRefreshButton(String s) {
         if(isNetworkAvailable() && talker == null) {
@@ -167,12 +144,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         }
     }
 
-    /**
-     * In case there are no popular skills on hotslogs
-     *
-     * @param name hero being passed in
-     * @return nothing if skills not found, else do like normal
-     */
     public String onChildPress(String name) {
         String skills;
         skills = db.getSkills(name);
@@ -183,12 +154,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         }
     }
 
-    /**
-     * Check the database for skill updates
-     *
-     * @param passed hero being passed from AsyncTask
-     * @param format throw formatted skill in DB
-     */
     public void checkDB(String passed, String format) {
         List<String> storedSkills = db.getAllHeroes();
         //Update or add new
@@ -199,14 +164,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         }
     }
 
-    /**
-     * Get table data from web and get the popular skill list from hotslogs
-     *
-     * @param doc Document from URL
-     * @param popularString the popular skill list from web table
-     * @param convert string of popular string
-     * @return the formatted DB string
-     */
     public String getTableFromWeb(Document doc, String popularString, String convert) {
         ArrayList<String> skillNames = new ArrayList<>();
         ArrayList<Integer> gamesInt = new ArrayList<>();
@@ -252,11 +209,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         return TalentFormatter.prettyPrinter(popularSkills);
     }
 
-    /**
-     * JSoup is used to get website data from hotslogs.com. This info will be thrown to the
-     * Database once acquired to keep it up to date
-     */
-    public class JSoupTalker extends AsyncTask<String, String, String> {
+    private class JSoupTalker extends AsyncTask<String, String, String> {
 
         String popularString, convert, format = null;
 

@@ -5,16 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.design.widget.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Database to hold heroes and skills, Table lookup is done by hero name as they are clicked
- * from the ExpandableList.
- *
- * @author ryan
- */
 public class HeroDatabase extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 6;
@@ -24,6 +19,7 @@ public class HeroDatabase extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_SKILLS = "skills";
+    //private static final String KEY_FAVORITE = "favorite";
 
     public HeroDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -34,7 +30,8 @@ public class HeroDatabase extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_HEROES + " ( " +
                         KEY_ID + " INTEGER primary key autoincrement, " +
                         KEY_NAME + " TEXT NOT NULL, " +
-                        KEY_SKILLS + " TEXT NOT NULL" + ")"
+                        KEY_SKILLS + " TEXT NOT NULL " + ")"
+                        //KEY_FAVORITE + " INTEGER " + ")"
         );
     }
 
@@ -46,11 +43,6 @@ public class HeroDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /**
-     * Initial adding a hero to the db
-     * @param hero passed in from who got clicked
-     * @param skills store what gets brought back from hotslogs
-     */
     public void addHero(String hero, String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -62,16 +54,11 @@ public class HeroDatabase extends SQLiteOpenHelper {
             return;
         }
         cv.put(KEY_SKILLS, skills);
+        //cv.put(KEY_FAVORITE, 0);
         db.insert(TABLE_HEROES, null, cv);
         db.close();
     }
 
-    /**
-     * Get skills needed to fill child group
-     *
-     * @param id find who's skills we're getting
-     * @return skills for child group in ELV
-     */
     public String getSkills(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_HEROES, new String[]{KEY_ID, KEY_NAME, KEY_SKILLS},
@@ -86,10 +73,6 @@ public class HeroDatabase extends SQLiteOpenHelper {
         return null;
     }
 
-    /**
-     *
-     * @return list of all entries in DB
-     */
     public List<String> getAllHeroes() {
         List<String> heroList = new ArrayList<>();
         // Select All Query
@@ -108,16 +91,25 @@ public class HeroDatabase extends SQLiteOpenHelper {
         cursor.close();
         return heroList;
     }
+//
+//    public List<String> getFavoriteHeroes() {
+//        List<String> favoriteList = new ArrayList<>();
+//        String selectQuery = "SELECT * " +
+//                "             FROM " + TABLE_HEROES +
+//                              "WHERE " + KEY_FAVORITE + " == 1";
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//        if(cursor.moveToFirst()) {
+//            do {
+//                String skills = cursor.getString(1);
+//                favoriteList.add(skills);
+//            } while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//        return favoriteList;
+//    }
 
-    /**
-     * Query:
-     * " UPDATE " + TABLE_HEROES +
-     * " SET " + KEY_SKILLS +"="+ "'"+skills+"'" +
-     * " WHERE " + KEY_NAME +"= ?";
-     *
-     * @param name hero being updated
-     * @param skills new skills being updated in db
-     */
     public void updateHero(String name, String skills) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues updateData = new ContentValues();
@@ -128,4 +120,12 @@ public class HeroDatabase extends SQLiteOpenHelper {
         String where=KEY_NAME + "= ?";
         db.update(TABLE_HEROES,updateData,where,new String[]{name});
     }
+
+//    public void updateFavoriteHero(String name, int fav) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        ContentValues updateData = new ContentValues();
+//        updateData.put(KEY_FAVORITE, fav);
+//        String where = KEY_NAME + "= ?";
+//        db.update(TABLE_HEROES, updateData, where, new String[]{name});
+//    }
 }

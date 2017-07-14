@@ -18,14 +18,6 @@ import com.ryan.heroestopbuilds.Utilities.HeroSelection;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Custom Adapter for the Expandable List to be used for all the Heroes
- * This will override a regular Expandable List since I want to use
- * images and an array list to hold the information.  The usual getters
- * and setters are here that are required for a BaseExpandableListAdapter
- *
- * @author ryan
- */
 public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<HeroSelection> heroes;

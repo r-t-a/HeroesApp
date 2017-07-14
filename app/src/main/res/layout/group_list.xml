@@ -27,6 +27,7 @@
         android:layout_alignBaseline="@+id/hero_text"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_marginRight="20dp"
         android:background="@drawable/ic_refresh"
         android:onClick="onRefreshButton"/>
 </RelativeLayout>
