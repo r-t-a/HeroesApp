@@ -79,7 +79,7 @@ public class TalentFormatter {
                 .replace("AFishy", "A Fishy")
                 .replace("Fearthe", "Fear the")
                 .replace("Hitthe", "Hit the")
-                .replace("XStrike", "X-Strike")
+                .replace("Kel Thuzad", "Kel'Thuzad")
                 .replace("Fromthe", "From the");
     }
 }
