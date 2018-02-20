@@ -10,11 +10,6 @@ import android.view.MenuItem;
 import com.ryan.heroestopbuilds.BuildConfig;
 import com.ryan.heroestopbuilds.R;
 
-/**
- * Info page
- *
- * @author ryan
- */
 
 public class InfoPreferenceActivity extends AppCompatActivity {
 
