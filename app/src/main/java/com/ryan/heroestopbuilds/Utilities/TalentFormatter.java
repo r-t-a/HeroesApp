@@ -80,6 +80,8 @@ public class TalentFormatter {
                 .replace("Fearthe", "Fear the")
                 .replace("Hitthe", "Hit the")
                 .replace("Kel Thuzad", "Kel'Thuzad")
+                .replace("RIPTire", "RIP Tire")
+                .replace("Grilland", "Grill and")
                 .replace("Fromthe", "From the");
     }
 }

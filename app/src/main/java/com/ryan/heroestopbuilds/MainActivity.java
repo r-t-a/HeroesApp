@@ -19,8 +19,8 @@ import android.widget.Toast;
 import com.ryan.heroestopbuilds.Adapters.CustomExpandableAdapter;
 import com.ryan.heroestopbuilds.Database.HeroDatabase;
 import com.ryan.heroestopbuilds.Interface.CallBackInterface;
+import com.ryan.heroestopbuilds.Models.Heroes;
 import com.ryan.heroestopbuilds.Preferences.InfoPreferenceActivity;
-import com.ryan.heroestopbuilds.Utilities.HeroSelection;
 import com.ryan.heroestopbuilds.Utilities.TalentFormatter;
 
 import org.jsoup.Jsoup;
@@ -33,15 +33,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements CallBackInterface,
-        SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainActivity extends AppCompatActivity implements CallBackInterface, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     ExpandableListView expandList;
     CustomExpandableAdapter customAdapt;
     HeroDatabase db = new HeroDatabase(this);
-    List<HeroSelection> list = new ArrayList<>();
+    List<Heroes> list = new ArrayList<>();
     JSoupTalker talker = null;
-    private ProgressDialog pd = null;
     private final String TAG = null;
     String selection = null;
 
@@ -50,20 +52,8 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         super.onCreate(savedInstanceState);
         this.customAdapt = new CustomExpandableAdapter(this);
         setContentView(R.layout.activity_main);
-        expandList = (ExpandableListView) findViewById(R.id.expandableList);
-        List<HeroSelection> heroes = heroList();
-        customAdapt = new CustomExpandableAdapter(MainActivity.this, heroes);
-        expandList.setAdapter(customAdapt);
-        expandList.setFastScrollEnabled(true);
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //make sure to check for active ui stuff that we need to close
-        if(pd != null) {
-            pd.dismiss();
-        }
+        loadJson();
     }
 
     @Override
@@ -112,28 +102,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         return false;
     }
 
-    /**
-     * Expand the ExpandableListView when called
-     */
-    private void expandAll() {
-        int count = customAdapt.getGroupCount();
-        for (int i = 0; i < count; i++) {
-            expandList.expandGroup(i);
-        }
-    }
-
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnected();
-    }
-
-    public List<HeroSelection> heroList() {
-        list = Arrays.asList(HeroSelection.values());
-        return list;
-    }
-
     @Override
     public void onRefreshButton(String s) {
         if(isNetworkAvailable() && talker == null) {
@@ -142,6 +110,49 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG)
                     .show();
         }
+    }
+
+    private void expandAll() {
+        int count = customAdapt.getGroupCount();
+        for (int i = 0; i < count; i++) {
+            expandList.expandGroup(i);
+        }
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnected();
+    }
+
+    public List<Heroes> buildList() {
+        list = db.getAllHeroes();
+        expandList = findViewById(R.id.expandableList);
+        customAdapt = new CustomExpandableAdapter(MainActivity.this, list);
+        expandList.setAdapter(customAdapt);
+        return list;
+    }
+
+    private void loadJson() {
+        Rest.INSTANCE.api().getAllHeroes().enqueue(new Callback<List<Heroes>>() {
+            @Override
+            public void onResponse(Call<List<Heroes>> call, Response<List<Heroes>> response) {
+                if(response.body() != null && response.isSuccessful()) {
+                    for (Heroes heroes : response.body()){
+                        Log.i("onResponse", heroes.toString());
+                        if(!db.recordExists(heroes.getName())) {
+                            db.addHero(heroes);
+                        }
+                    }
+                }
+                buildList();
+            }
+
+            @Override
+            public void onFailure(Call<List<Heroes>> call, Throwable t) {
+                Log.e("onFailure", t.toString());
+            }
+        });
     }
 
     public String onChildPress(String name) {
@@ -155,13 +166,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     }
 
     public void checkDB(String passed, String format) {
-        List<String> storedSkills = db.getAllHeroes();
-        //Update or add new
-        if (storedSkills.contains(passed)) {
-            db.updateHero(passed, format);
-        } else {
-            db.addHero(passed, format);
-        }
+        db.updateHeroSkills(passed, format);
     }
 
     public String getTableFromWeb(Document doc, String popularString, String convert) {
@@ -212,14 +217,13 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     private class JSoupTalker extends AsyncTask<String, String, String> {
 
         String popularString, convert, format = null;
+        final ProgressDialog pd = new ProgressDialog(MainActivity.this);
 
         @Override
         protected void onPreExecute() {
             Log.i(TAG, "PreExecute");
-            pd = new ProgressDialog(MainActivity.this);
             pd.setCancelable(false);
             pd.setIndeterminate(false);
-            //pd.setMessage("Gathering Popular Builds");
             pd.show();
         }
 
@@ -229,31 +233,15 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             Document doc;
             String URL = "https://www.hotslogs.com/Sitewide/HeroDetails?Hero=";
             String passed = params[0];
-            if(passed.equals("all")) {
-                try {
-                    for(HeroSelection h: HeroSelection.values()) {
-                        String names = h.getName();
-                        publishProgress("Gathering Popular Builds " + names);
-                        doc = Jsoup.connect(URL + names).maxBodySize(0).get();
-                        format = getTableFromWeb(doc, popularString, convert);
-                        // Double check in logcat we got the right skills
-                        //Log.i(TAG, names + ":   " + format);
-                        checkDB(names,format);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    pd.setMessage("Gathering Popular Builds " + passed);
-                    doc = Jsoup.connect(URL + passed).maxBodySize(0).get();
-                    format = getTableFromWeb(doc, popularString, convert);
-                    // Double check in logcat we got the right skills
-                    //Log.i(TAG, passed + ":   " + format);
-                    checkDB(passed, format);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                pd.setMessage("Gathering Popular Builds " + passed);
+                doc = Jsoup.connect(URL + passed).maxBodySize(0).get();
+                format = getTableFromWeb(doc, popularString, convert);
+                // Double check in logcat we got the right skills
+                //Log.i(TAG, passed + ":   " + format);
+                checkDB(passed, format);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return null;
         }
