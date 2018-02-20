@@ -1,6 +1,5 @@
 package com.ryan.heroestopbuilds.Adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,27 +11,20 @@ import android.widget.TextView;
 
 import com.ryan.heroestopbuilds.Interface.CallBackInterface;
 import com.ryan.heroestopbuilds.MainActivity;
+import com.ryan.heroestopbuilds.Models.Heroes;
+import com.ryan.heroestopbuilds.PicassoClient;
 import com.ryan.heroestopbuilds.R;
-import com.ryan.heroestopbuilds.Utilities.HeroSelection;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Custom Adapter for the Expandable List to be used for all the Heroes
- * This will override a regular Expandable List since I want to use
- * images and an array list to hold the information.  The usual getters
- * and setters are here that are required for a BaseExpandableListAdapter
- *
- * @author ryan
- */
 public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private ArrayList<HeroSelection> heroes;
-    private ArrayList<HeroSelection> originalList;
+    private ArrayList<Heroes> heroes;
+    private ArrayList<Heroes> originalList;
     public CallBackInterface listener;
 
-    public CustomExpandableAdapter(Context context, List<HeroSelection> heroes) {
+    public CustomExpandableAdapter(Context context, List<Heroes> heroes) {
         this.context = context;
         this.heroes = new ArrayList<>();
         this.heroes.addAll(heroes);
@@ -74,8 +66,6 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
         return groupPosition;
     }
 
-    // Ok to suppress this for Lint
-    @SuppressLint("InflateParams")
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
@@ -84,31 +74,32 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = factory.inflate(R.layout.group_list,null);
         }
-        TextView tv = (TextView)convertView.findViewById(R.id.hero_text);
-        ImageView iv = (ImageView)convertView.findViewById(R.id.hero_portrait);
-        Button refresh = (Button)convertView.findViewById(R.id.refresh);
-        final HeroSelection i = heroes.get(groupPosition);
+        TextView tv = convertView.findViewById(R.id.hero_text);
+        ImageView iv = convertView.findViewById(R.id.hero_portrait);
+        Button refresh = convertView.findViewById(R.id.refresh);
+        Heroes i = heroes.get(groupPosition);
+        final Heroes hero = new Heroes(i.getName(), i.getIcon().getPortrait());
         refresh.setFocusable(false);
         refresh.setOnClickListener(new View.OnClickListener() {
             String selection = "";
             @Override
             public void onClick(View v) {
-                // Rick's "6Cans Tricky Dicky" refactor ;)
                 if(selection == null) {
                     return;
                 }
-                selection = i.getName();
+                selection = hero.getName();
                 if (context instanceof MainActivity) {
                     ((MainActivity)context).onRefreshButton(selection);
                 }
             }
         });
-        tv.setText(i.getName());
-        iv.setImageResource(i.getPortrait());
+
+        tv.setText(hero.getName());
+        setImageView(hero, iv);
+
         return convertView;
     }
 
-    @SuppressLint("InflateParams")
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         if(convertView == null) {
@@ -116,8 +107,8 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = factory.inflate(R.layout.child_list,null);
         }
-        TextView tv = (TextView)convertView.findViewById(R.id.skill_text);
-        HeroSelection i = heroes.get(groupPosition);
+        TextView tv = convertView.findViewById(R.id.skill_text);
+        Heroes i = heroes.get(groupPosition);
         String selection = i.getName();
         if (context instanceof MainActivity) {
             String skills = ((MainActivity)context).onChildPress(selection);
@@ -148,8 +139,8 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
         if(query.isEmpty()) {
             heroes.addAll(originalList);
         } else {
-            ArrayList<HeroSelection> newList = new ArrayList<>();
-            for(HeroSelection hero: originalList) {
+            ArrayList<Heroes> newList = new ArrayList<>();
+            for(Heroes hero: originalList) {
                 if(hero.getName().toLowerCase().contains(query)) {
                     newList.add(hero);
                 }
@@ -159,5 +150,34 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
             }
         }
         notifyDataSetChanged();
+    }
+
+    private void setImageView(Heroes hero, ImageView iv) {
+
+        switch (hero.getName()){
+            case "The Butcher":
+                iv.setImageResource(R.drawable.the_butcher);
+                break;
+            case "Alexstrasza":
+                iv.setImageResource(R.drawable.alexstrasza);
+                break;
+            case "Blaze":
+                iv.setImageResource(R.drawable.blaze);
+                break;
+            case "Hanzo":
+                iv.setImageResource(R.drawable.hanzo);
+                break;
+            case "Junkrat":
+                iv.setImageResource(R.drawable.junkrat);
+                break;
+            case "Maiev":
+                iv.setImageResource(R.drawable.maiev);
+                break;
+            case "Zul'jin":
+                iv.setImageResource(R.drawable.zuljin);
+                break;
+            default:
+                PicassoClient.downloadImage(context,hero.getIcon().getPortrait(), iv);
+        }
     }
 }
