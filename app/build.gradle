@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 def versionMajor = 4
-def versionMinor = 0
-def versionPatch = 0
+def versionMinor = 35
+def versionPatch = 1
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
@@ -18,7 +18,6 @@ android {
         }
     }
     compileSdkVersion 26
-    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "com.ryan.heroestopbuilds"
         minSdkVersion 15
@@ -40,11 +39,11 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'org.jsoup:jsoup:1.8.2'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'org.jsoup:jsoup:1.8.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.0.1'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.google.code.gson:gson:2.8.0'
 }
