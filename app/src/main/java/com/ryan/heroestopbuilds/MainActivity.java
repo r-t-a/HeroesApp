@@ -29,7 +29,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         super.onCreate(savedInstanceState);
         this.customAdapt = new CustomExpandableAdapter(this);
         setContentView(R.layout.activity_main);
-
         loadJson();
     }
 
@@ -72,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.action_info:
                 Intent intent = new Intent(getApplicationContext(),InfoPreferenceActivity.class);
@@ -107,8 +104,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         if(isNetworkAvailable() && talker == null) {
             new JSoupTalker().execute(s);
         } else {
-            Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -169,54 +165,47 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         db.updateHeroSkills(passed, format);
     }
 
-    public String getTableFromWeb(Document doc, String popularString, String convert) {
+    public String getTableFromWeb(Document doc) {
+        if(doc == null) {
+            return null;
+        }
+
         ArrayList<String> skillNames = new ArrayList<>();
         ArrayList<Integer> gamesInt = new ArrayList<>();
         ArrayList<String> popularSkills;
         //get the table
-        Element table = doc.getElementsByTag("table").get(2);
-        for (Element row : table.select("tr")) {
-            Elements cols = row.select("td");
-            if(cols.size() > 10) {
-                String formatInt = cols.get(0).text().replace(",","");
-                gamesInt.add(Integer.valueOf(formatInt));
-                Integer popular = Collections.max(gamesInt);
-                popularString = popular.toString();
-                if (formatInt.equals(popularString)) {
-                    //add to new array
-                    skillNames.add(row.text());
+        try{
+            Element table = doc.getElementsByTag("table").get(2);
+            for (Element row : table.select("tr")) {
+                Elements cols = row.select("td");
+                if(cols.size() > 10) {
+                    String formatInt = cols.get(0).text().replace(",","");
+                    gamesInt.add(Integer.valueOf(formatInt));
+                    Integer popular = Collections.max(gamesInt);
+                    if (formatInt.equals(popular.toString())) {
+                        for (Element col : cols){
+                            String title = col.select("img").attr("title");
+                            String[] split = title.split(":");
+                            String skill = split[0];
+                            if(skill.equals(""))
+                                skill = "Player's Choice";
+                            skillNames.add(skill);
+                        }
+                    }
                 }
             }
+        } catch (Exception e){
+            return null;
         }
-        for (String eval : skillNames) {
-            String save = eval.replace(",","");
-            if (save.contains(popularString)) {
-                convert = eval;
-            }
-        }
-        if(convert == null) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(getApplicationContext(), R.string.no_builds, Toast.LENGTH_SHORT).show();
-                }
-            });
-            convert = "Refresh to get skills";
-            return convert;
-        }
-        // Split that long string up and put it into a list
-        popularSkills = new ArrayList<>(Arrays.asList(convert.split(" ")));
-        popularSkills.remove(0);  //remove games play #
-        popularSkills.remove(0);  //remove whitespace
-        if(popularSkills.get(0).equals("%")) {
-            popularSkills.remove(0);  // remove % sign if still present
-        }
-        // Pretty print
+
+        if(skillNames.size() == 0) return null;
+        popularSkills = new ArrayList<>(skillNames.subList(2,8));
         return TalentFormatter.prettyPrinter(popularSkills);
     }
 
     private class JSoupTalker extends AsyncTask<String, String, String> {
 
-        String popularString, convert, format = null;
+        String format = null;
         final ProgressDialog pd = new ProgressDialog(MainActivity.this);
 
         @Override
@@ -236,9 +225,10 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
             try {
                 pd.setMessage("Gathering Popular Builds " + passed);
                 doc = Jsoup.connect(URL + passed).maxBodySize(0).get();
-                format = getTableFromWeb(doc, popularString, convert);
-                // Double check in logcat we got the right skills
-                //Log.i(TAG, passed + ":   " + format);
+                format = getTableFromWeb(doc);
+                if(format == null) {
+                    return null;
+                }
                 checkDB(passed, format);
             } catch (IOException e) {
                 e.printStackTrace();

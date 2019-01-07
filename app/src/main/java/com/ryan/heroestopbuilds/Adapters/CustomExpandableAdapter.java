@@ -155,6 +155,24 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
     private void setImageView(Heroes hero, ImageView iv) {
 
         switch (hero.getName()){
+            case "Deckard":
+                iv.setImageResource(R.drawable.deckard);
+                break;
+            case "Mal'Ganis":
+                iv.setImageResource(R.drawable.malganis);
+                break;
+            case "Mephisto":
+                iv.setImageResource(R.drawable.mephisto);
+                break;
+            case "Orphea":
+                iv.setImageResource(R.drawable.orphea);
+                break;
+            case "Whitemane":
+                iv.setImageResource(R.drawable.whitemane);
+                break;
+            case "Yrel":
+                iv.setImageResource(R.drawable.yrel);
+                break;
             case "The Butcher":
                 iv.setImageResource(R.drawable.the_butcher);
                 break;
@@ -163,6 +181,9 @@ public class CustomExpandableAdapter extends BaseExpandableListAdapter {
                 break;
             case "Blaze":
                 iv.setImageResource(R.drawable.blaze);
+                break;
+            case "Fenix":
+                iv.setImageResource(R.drawable.fenix);
                 break;
             case "Hanzo":
                 iv.setImageResource(R.drawable.hanzo);
